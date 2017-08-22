@@ -2,86 +2,84 @@
     <head>
      <meta name="description" content="Php Code for View, Search, Edit and Delete Record" />
      <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-     <title>OSTC Infra Systems Database</title>
+     <title>ODB Donation Database</title>
     </head>
     <body>
-        <center><h1><u>OSTC Infra Systems Database</u></h1></center>
+        <center><h1><u>ODB Donation Database</u></h1></center>
           <table style=" border:1px solid silver" cellpadding="5" cellspacing="0" align="center" border="1">
             <tr>
                 <td colspan="4" style="background:#6495ED; color:black; font-size:20px" align="center">View System Record</td>
             </tr>
 <?php
-    $serverName = "(local)";
-    $connectionOptions = array("Database"=>"xxxxxx");
-    $name=$_GET["name"];
+    $serverName = "localhost";
+    $username   = "user";
+    $password   = "password";
+    $dbname     = "database";
+    $rec_id     = $_GET["id"];
 
-    /* Connect using Windows Authentication. */
-
-    $conn = sqlsrv_connect( $serverName, $connectionOptions);
-    if( $conn === false ) {
+    $conn = mysqli_connect($serverName, $username, $password, $dbname);
+    if( $conn->connect_error ) {
         echo "Connection could not be established.<br/>";
-        die( FormatErrors( sqlsrv_errors() ) );
+        die($conn->connect_error);
     }
-
-    $tsql = "SELECT * FROM Systems WHERE Name = '" . $name . "'";
-    $result = sqlsrv_query( $conn,$tsql );
-    if ( $result ) 
+    try
     {
-        while( $row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC) )
+        $sql    = "SELECT * FROM Donation WHERE Id = '".$rec_id."'";
+        $result = $conn->query($sql);
+        if ( $result->num_rows > 0 ) 
         {
-            echo "  <tr>";
-            echo "     <td><b>System Name:</b></td>";
-            echo "     <td>".$row['Name']."</td>";
-            echo "     <td><b>OS:</b></td>";
-            echo "     <td>".$row['OS']."</td>";
-            echo "  </tr>";
-            echo "  <tr>";
-            echo "     <td><b>Type:</b></td>";
-            echo "     <td>".$row['Type']."</td>";
-            echo "     <td><b>Rack:</b></td>";
-            echo "     <td>".$row['Rack']."</td>";
-            echo "  </tr>";
-            echo "  <tr>";
-            echo "     <td><b>Physical Name:</b></td>";
-            echo "     <td>".$row['Physical_Name']."</td>";
-            echo "     <td><b>Serial #:</b></td>";
-            echo "     <td>".$row['Serial_Number']."</td>";
-            echo "  </tr>";
-            echo "  <tr>";
-            echo "     <td><b>Model:</b></b></td>";
-            echo "     <td>".$row['Model']."</td>";
-            echo "     <td><b>Support:</b></td>";
-            echo "     <td>".$row['Support']."</td>";
-            echo "  </tr>";
-            echo "  <tr>";
-            echo "     <td><b>Asset Tag:</b></td>";
-            echo "     <td>".$row['Asset_Tag']."</td>";
-            echo "     <td><b>Amount of Memory(GB):</b></td>";
-            echo "     <td>".$row['Memory_GB']."</td>";
-            echo "  </tr>";
-            echo "  <tr>";
-            echo "     <td><b>Uptime:</b></td>";
-            echo "     <td>".$row['Uptime']."</td>";
-            echo "     <td><b>Number of CPUs:</b></td>";
-            echo "     <td>".$row['CPU']."</td>";
-            echo "  </tr>";
+            while($row = $result->fetch_assoc()) 
+            {
+                echo "  <tr>";
+                echo "     <td><b>Name:</b></td>";
+                echo "     <td>".$row['Name']."</td>";
+                echo "     <td><b>Vendor:</b></td>";
+                echo "     <td>".$row['Vendor']."</td>";
+                echo "  </tr>";
+                echo "  <tr>";
+                echo "     <td><b>Email:</b></td>";
+                if ($row['Email'] == 'Unknown')
+                {
+                    echo "   <td bgcolor=#FF0000>".$row['Email']."</td>\n";
+                }
+                else
+                {
+                    echo "   <td bgcolor=#00FF00><a href='mailto:".$row['Email']."'>".$row['Email']."</td>\n";
+                }
+                echo "     <td><b>Driver:</b></td>";
+                echo "     <td>".$row['Driver']."</td>";
+                echo "  </tr>";
+                echo "  <tr>";
+                echo "     <td><b>Item:</b></td>";
+                echo "     <td>".$row['Items']."</td>";
+                echo "     <td><b>Item Description:</b></td>";
+                echo "     <td>".$row['ItemDesc']."</td>";
+                echo "  </tr>";
+                echo "  <tr>";
+                echo "     <td><b>Quantity:</b></b></td>";
+                echo "     <td>".$row['Quantity']."</td>";
+                echo "     <td><b>$ Value:</b></td>";
+                echo "     <td>".$row['Value']."</td>";
+                echo "  </tr>";
+                echo "  <tr>";
+                echo "     <td><b>Weight:</b></td>";
+                echo "     <td>".$row['Weight']."</td>";
+                echo "     <td><b>Date:</b></td>";
+                echo "     <td>".$row['Date']."</td>";
+                echo "  </tr>";
+            }
+        }
+        else 
+        {
+            echo "Error: " . $sql . "<br>" . $conn->error;  
         }
     }
-    else 
+    catch(Exception $e)
     {
-        echo "Query failed.<br />";  
-        die( FormatErrors( sqlsrv_errors() ) );
-    }
-    
-    function FormatErrors( $errors )
-    {
-        /* Display errors. */
-        echo "Error information: <br/>";
-        foreach ( $errors as $error )
+        echo $message = $e->getMessage();
+        if ( strpos($message, 'error in your SQL syntax') !== false )
         {
-            echo "SQLSTATE: ".$error['SQLSTATE']."<br/>";
-            echo "Code: ".$error['code']."<br/>";
-            echo "Message: ".$error['message']."<br/>";
+            $message = "Error: Verify there are no single quotes used in any field";
         }
     }
 ?>
@@ -90,8 +88,8 @@
              </tr>
              <tr>
                <td colspan="2">&nbsp;</td>
-               <td colspan="1" align="center"><a href="edit.php?name=<?php echo $name; ?>"><b>Edit</b></a></td>
-               <td colspan="1" align="center"><a href="delete.php?name=<?php echo $name; ?>"><b>Delete</b></a></td>
+               <td colspan="1" align="center"><a href="edit.php?id=<?php echo $rec_id; ?>"><b>Edit</b></a></td>
+               <td colspan="1" align="center"><a href="delete.php?id=<?php echo $rec_id; ?>"><b>Delete</b></a></td>
              </tr>
              <tr bgcolor="#6495ED">
                <th colspan="4" align="center"><a href="index.php">Home</a></th>

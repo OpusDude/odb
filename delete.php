@@ -13,35 +13,32 @@
     </head>
     <body>
 <?php
-    $serverName = "(local)";
-    $connectionOptions = array("Database"=>"xxxxx");
-    $name=$_GET["name"];
-    $secret="xxxxxxxxxx";
+    $serverName = "localhost";
+    $username   = "user";
+    $password   = "password";
+    $dbname     = "database";
+    $rec_id     = $_GET["id"];
+    $secret     = "secret";
 
-    /* Connect using Windows Authentication. */
-
-    $conn = sqlsrv_connect( $serverName, $connectionOptions);
-    if( $conn === false ) {
+    $conn = mysqli_connect($serverName, $username, $password, $dbname);
+    if( $conn->connect_error ) {
         echo "Connection could not be established.<br/>";
-        die( FormatErrors( sqlsrv_errors() ) );
+        die($conn->connect_error);
     }
     
     if($_POST["do"]=="delete")
     { 
         if($_POST['password'] === $secret)
         {
-            $tsql = "DELETE from Systems WHERE Name = '" . $name . "'";
+            $sql = "DELETE from Donation WHERE Id = '".$rec_id."'";
     
-            $result = sqlsrv_query( $conn,$tsql );
-            
-            if ($result)
+            if ($conn->query($sql) === TRUE)
             {
-                $msg_success = "System " .$name. " successfully deleted from database";
+                $msg_success = "Donation entry " .$rec_id. " successfully deleted from database";
             }
             else 
             {
-                echo "Query failed.<br />";  
-                die( FormatErrors( sqlsrv_errors() ) );
+                $msg_failure = "Error: " . $sql . "<br>" . $conn->error;
             }
         }
         else 
@@ -51,16 +48,55 @@
     } 
 ?>
       <div class="container">
-         <center><h1><u>OSTC Infra Systems Database</u></h1></center>
+         <center><h1><u>ODB Donation Database</u></h1></center>
          <center><h3 class="success_msg"><?php echo $msg_success; ?></h3></center>
          <center><h3 class="failure_msg"><?php echo $msg_failure; ?></h3></center>
-         <form id="delete_form" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>?name=<?php echo $name; ?>">
+         <form id="delete_form" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>?id=<?php echo $rec_id; ?>">
           <table style=" border:1px solid silver" cellpadding="5" cellspacing="0" align="center" border="1">
             <tr>
                 <td colspan="4" style="background:#6495ED; color:black; font-size:20px" align="center">Delete System Record</td>
             </tr>
             <tr>
-                <td><b>System to Delete: <?php echo $name; ?></b></td>
+            <?php
+            $sql    = "SELECT * FROM Donation WHERE Id = '".$rec_id."'";
+            $result = $conn->query($sql);
+            if ( $result->num_rows > 0 ) 
+            {
+               while($row = $result->fetch_assoc()) 
+               {
+                  echo "  <tr>";
+                  echo "     <td><b>Name:</b></td>";
+                  echo "     <td>".$row['Name']."</td>";
+                  echo "     <td><b>Vendor:</b></td>";
+                  echo "     <td>".$row['Vendor']."</td>";
+                  echo "  </tr>";
+                  echo "  <tr>";
+                  echo "     <td><b>Email:</b></td>";
+                  echo "   <td bgcolor=#00FF00><a href='mailto:".$row['Email']."'>".$row['Email']."</td>\n";
+                  echo "     <td><b>Driver:</b></td>";
+                  echo "     <td>".$row['Driver']."</td>";
+                  echo "  </tr>";
+                  echo "  <tr>";
+                  echo "     <td><b>Item:</b></td>";
+                  echo "     <td>".$row['Items']."</td>";
+                  echo "     <td><b>Item Description:</b></td>";
+                  echo "     <td>".$row['ItemDesc']."</td>";
+                  echo "  </tr>";
+                  echo "  <tr>";
+                  echo "     <td><b>Quantity:</b></b></td>";
+                  echo "     <td>".$row['Quantity']."</td>";
+                  echo "     <td><b>$ Value:</b></td>";
+                  echo "     <td>".$row['Value']."</td>";
+                  echo "  </tr>";
+                  echo "  <tr>";
+                  echo "     <td><b>Weight:</b></td>";
+                  echo "     <td>".$row['Weight']."</td>";
+                  echo "     <td><b>Date:</b></td>";
+                  echo "     <td>".$row['Date']."</td>";
+                  echo "  </tr>";
+                }
+            }
+            ?>
                 <td><b>Enter Password:</b></td>
                 <td><input type="password" id="password" name="password" size="20"></td>
                 <td colspan="4" align="right"><input type="hidden" name="do" value="delete"><input type="submit" value="Delete Record"></td>
