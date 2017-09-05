@@ -21,12 +21,14 @@
         <td>&nbsp;</td>
 <?php
  $serverName = "localhost";
- $username   = "user";
- $password   = "password";
- $dbname     = "database";
+ $username   = "root";
+ $password   = "sbAXBP9*qdyE";
+ $dbname     = "ODB_DB";
  $search     = $_POST["search"];
- $fromDate   = $_POST["fdYear"]."-".$_POST["fdMonth"]."-".$_POST["fdDay"];
- $toDate     = $_POST["tdYear"]."-".$_POST["tdMonth"]."-".$_POST["tdDay"];
+ $holdFrom   = explode("/", $_POST["datef"]);
+ $fromDate   = $holdFrom[2]. "-" .$holdFrom[1]. "-" .$holdFrom[0];
+ $holdTo     = explode("/", $_POST["datet"]);
+ $toDate     = $holdTo[2]. "-" .$holdTo[1]. "-" .$holdTo[0];
 
  $conn = mysqli_connect($serverName, $username, $password, $dbname);
  if( $conn->connect_error ) {
@@ -35,7 +37,7 @@
  }
  try
  {
-   if ( empty($search) )
+   if (empty($search))
    {
      $sql  = "SELECT * FROM Donation WHERE Date > '$fromDate' AND Date < '$toDate'";
      $sqlw = "SELECT SUM(Weight) as sum_weight FROM Donation WHERE Date > '$fromDate' AND Date < '$toDate'";

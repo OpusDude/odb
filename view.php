@@ -12,9 +12,9 @@
             </tr>
 <?php
     $serverName = "localhost";
-    $username   = "user";
-    $password   = "password";
-    $dbname     = "database";
+    $username   = "root";
+    $password   = "sbAXBP9*qdyE";
+    $dbname     = "ODB_DB";
     $rec_id     = $_GET["id"];
 
     $conn = mysqli_connect($serverName, $username, $password, $dbname);

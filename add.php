@@ -13,9 +13,9 @@
     <body>
  <?php
     $serverName = "localhost";
-    $username   = "user";
-    $password   = "password";
-    $dbname     = "database";
+    $username   = "root";
+    $password   = "sbAXBP9*qdyE";
+    $dbname     = "ODB_DB";
     $name       = $_GET["Name"];
     
     mysqli_report(MYSQLI_REPORT_ALL);
@@ -30,7 +30,7 @@
     {
         if(empty($_POST["Name"]))
         {
-            $msg_name = "You must supply a contact name";
+            $msg_name = "You must supply a vendor contact name";
         }
         else 
         {
@@ -154,7 +154,7 @@
         }
         else
         { 
-            $message = "A field is not formatted corretly";
+            $message = "A field is not formatted correctly";
         }
     }
 ?>
@@ -168,9 +168,9 @@
                         <td colspan="4" style="background:#6495ED; color:black; fontsize:20px">Add ODB Donation Record</td>
                     </tr>
                     <tr>
-                        <td><b>Enter Name:</b><span class="note">*</span></td>
+                        <td><b>Vendor Contact:</b><span class="note">*</span></td>
                         <td><input type="text" id="name" name="Name" size="25" value = '<?php echo $_POST['Name']; ?>'></td>
-                        <td><b>Enter Email:</b><span class="note">*</span></td>
+                        <td><b>Vendor Email:</b><span class="note">*</span></td>
                         <td><input type="text" name="Email" size="20" value="<?php echo $_POST['Email']; ?>"></td>
                     </tr>
                     <tr>
@@ -230,9 +230,9 @@
                         <td><p class="note"><?php echo $msg_itemdesc ?></p></td>
                     </tr>
                     <tr>
-                        <td><b>Enter Driver Name:</b><span class="note">*</span></td>
+                        <td><b>Driver Name:</b><span class="note">*</span></td>
                         <td><input type="text" name="Driver" size="20" value="<?php echo $_POST['Driver']; ?>"></td>
-                        <td><b>Enter Quantity:</b><span class="note">*</span></td>
+                        <td><b>Quantity:</b><span class="note">*</span></td>
                         <td><input type="text" name="Quantity" size="20" value="<?php echo $_POST['Quantity']; ?>"></td>
                     </tr>
                     <tr>
@@ -240,9 +240,9 @@
                         <td></td>
                         <td><p class="note"><?php echo $msg_quantity ?></p></td>
                     <tr>
-                        <td><b>Enter Dollar Value:</b><span class="note">*</span></td>
+                        <td><b>Dollar Value:</b><span class="note">*</span></td>
                         <td><input type="text" name="Value" size="20" value="<?php echo $_POST['Value']; ?>"></td>
-                        <td><b>Enter Weight (lbs):</b><span class="note">*</span></td>
+                        <td><b>Weight (lbs):</b><span class="note">*</span></td>
                         <td><input type="text" name="Weight" size="20" value="<?php echo $_POST['Weight']; ?>"></td>
                     </tr>
                     <tr>

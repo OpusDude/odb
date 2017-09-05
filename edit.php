@@ -30,7 +30,7 @@
     {
         if(empty($_POST["Name"]))
         {
-            $msg_name = "You must supply a contact name";
+            $msg_name = "You must supply a vendor contact name";
         }
         else 
         {
@@ -155,7 +155,7 @@
         }
         else
         { 
-            $message = "A field is not formatted corretly";
+            $message = "A field is not formatted correctly";
         }
     }
 ?>
