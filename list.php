@@ -35,6 +35,18 @@
         elseif (!empty($_GET['itemType']))
         {
             $varType = $_GET['itemType'];
+            if ( $varType == 'ALL' )
+            {
+                $sql1 = "SELECT * FROM Donation";
+                $sql2 = "SELECT SUM(Weight) as sum_weight FROM Donation";
+                $sql3 = "SELECT SUM(Value) as sum_value FROM Donation";
+            }
+            else
+            {
+                $sql1 = "SELECT * FROM Donation WHERE Items = '$varType'";
+                $sql2 = "SELECT SUM(Weight) as sum_weight FROM Donation WHERE Items = '$varType'";
+                $sql3 = "SELECT SUM(Value) as sum_value FROM Donation WHERE Items = '$varType'";
+            }
         }
         else
         {
@@ -50,7 +62,6 @@
         $result = $conn->query($sql3);
         $totalValue = mysqli_fetch_assoc($result);
     ?>
- <script type="text/javascript" src="http://services.iperfect.net/js/IP_generalLib.js"></script>
  <body> 
     <center><h1><u>ODB Donation Database</u></h1></center> 
     <form name="RecordType" method="post" action="">
@@ -170,13 +181,13 @@
             echo "   <TD>".$row['Date']."</TD>\n";
             //echo "   <TD>".$row['Date']->format('Y-m-d H:i:s')."</TD>\n";
         }
+    }
     echo " </p>\n";
     echo " <tr bgcolor='#6495ED'>\n";
     echo "  <th colspan='10' align='center' border='1'><a href='index.php'>Home</a></th>\n";
     echo " </tr>\n";
 
     echo "</table>\n";
-    }
     ?>
     </form> 
  </body> 

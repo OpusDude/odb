@@ -18,7 +18,7 @@
     $password   = "sbAXBP9*qdyE";
     $dbname     = "ODB_DB";
     $rec_id     = $_GET["id"];
-    $secret     = "secret";
+    $secret     = "AYS";
 
     $conn = mysqli_connect($serverName, $username, $password, $dbname);
     if( $conn->connect_error ) {
