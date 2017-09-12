@@ -73,19 +73,20 @@
         <option value="Other" <?php echo ($varType == 'Other' ? 'selected="selected"' : '') ?>>Other</option>
     </select>
         <input type="submit" name="Submit" value="Select" /></TD>
-        <TD colspan="2" align="center"><b>Number of Items: <?php echo $numItems; ?></b></TD>
+        <TD colspan="3" align="center"><b>Number of Items: <?php echo $numItems; ?></b></TD>
         <TD colspan="4" align="center"><b>Total Weight (lbs): <?php echo $totalWeight['sum_weight']; ?></b></TD>
         <TD colspan="4" align="center"><b>Total Value: $<?php echo round($totalValue['sum_value'],2); ?></b></TD>
     </TR>
     <TR>
+        <TH bgcolor=#6495ED><a href="list.php?sort=RecordId&itemType=<?php echo $varType ?>" style="color:black">Record ID</a></TH>
         <TH bgcolor=#6495ED><a href="list.php?sort=Name&itemType=<?php echo $varType ?>" style="color:black">Vendor Contact</a></TH>
         <TH bgcolor=#6495ED><a href="list.php?sort=Vendor&itemType=<?php echo $varType ?>" style="color:black">Vendor</a></TH>
         <TH bgcolor=#6495ED><a href="list.php?sort=Email&itemType=<?php echo $varType ?>" style="color:black">Email</a></TH>
         <TH bgcolor=#6495ED><a href="list.php?sort=Driver&itemType=<?php echo $varType ?>" style="color:black">Driver</a></TH>
         <TH bgcolor=#6495ED><a href="list.php?sort=Items&itemType=<?php echo $varType ?>" style="color:black">Item</a></TH>
         <TH bgcolor=#6495ED><a href="list.php?sort=ItemDesc&itemType=<?php echo $varType ?>" style="color:black">Item Description</a></TH>
-        <TH bgcolor=#6495ED><a href="list.php?sort=QuantityType&itemType=<?php echo $varType ?>" style="color:black">QuantityType</a></TH>
         <TH bgcolor=#6495ED><a href="list.php?sort=Quantity&itemType=<?php echo $varType ?>" style="color:black">Quantity</a></TH>
+        <TH bgcolor=#6495ED><a href="list.php?sort=QuantityType&itemType=<?php echo $varType ?>" style="color:black">QuantityType</a></TH>
         <TH bgcolor=#6495ED><a href="list.php?sort=Value&itemType=<?php echo $varType ?>" style="color:black">Value</a></TH>
         <TH bgcolor=#6495ED><a href="list.php?sort=Weight&itemType=<?php echo $varType ?>" style="color:black">Weight</a></TH>
         <TH bgcolor=#6495ED><a href="list.php?sort=Date&itemType=<?php echo $varType ?>" style="color:black">Date</a></TH>
@@ -94,7 +95,7 @@
     <?php
     if (empty($varType) || $varType == 'ALL')
     {
-    $sql = "SELECT Donation.Id, Donation.Vendor AS VendorId, Vendor.Contact AS Name, Vendor.Email AS Email,
+    $sql = "SELECT Donation.Id As RecordId, Donation.Vendor AS VendorId, Vendor.Contact AS Name, Vendor.Email AS Email,
             Vendor.Vendor AS Vendor, Donation.Driver AS DriverId, Driver.Driver AS Driver, Donation.Items, 
             Donation.ItemDesc, Donation.QuantityType, Donation.Quantity, Donation.Value, Donation.Weight, Donation.Date 
             FROM `Donation` INNER JOIN Vendor on Donation.Vendor = Vendor.Id 
@@ -106,6 +107,10 @@
     }
     if (!empty($_GET['sort']))
     {
+    if ($_GET['sort'] == 'RecordId')
+    {
+        $sql .= " ORDER BY RecordId";
+    }
     if ($_GET['sort'] == 'Name')
     {
         $sql .= " ORDER BY Name";
@@ -162,14 +167,15 @@
         while( $row = $result->fetch_assoc() ) 
         {
             echo "  <TR>\n";
-            echo "   <TD><a href='view.php?id=".$row['VendorId']."'>" .$row['Name']. "</a></TD>\n";
-            echo "   <TD>".$row['Vendor']."</TD>\n";
+            echo "   <TD align=center><a href='viewrecord.php?id=".$row['RecordId']."'>View # " .$row['RecordId']. "</a></TD>\n";
+            echo "   <TD>".$row['Name']."</TD>\n";
+            echo "   <TD><a href='viewvendor.php?id=".$row['VendorId']."'>" .$row['Vendor']. "</a></TD>\n";
             echo "   <TD bgcolor=#00FF00><a href='mailto:".$row['Email']."'>".$row['Email']."</TD>\n";
-            echo "   <TD>".$row['Driver']."</TD>\n";
+            echo "   <TD><a href='viewdriver.php?id=".$row['DriverId']."'>" .$row['Driver']. "</a></TD>\n";
             echo "   <TD>".$row['Items']."</TD>\n";
             echo "   <TD>".$row['ItemDesc']."</TD>\n";
-            echo "   <TD>".$row['QuantityType']."</TD>\n";
             echo "   <TD>".$row['Quantity']."</TD>\n";
+            echo "   <TD>".$row['QuantityType']."</TD>\n";
             echo "   <TD>".$row['Value']."</TD>\n";
             echo "   <TD>".$row['Weight']."</TD>\n";
             echo "   <TD>".$row['Date']."</TD>\n";
@@ -178,7 +184,7 @@
     }
     echo " </p>\n";
     echo " <tr bgcolor='#6495ED'>\n";
-    echo "  <th colspan='11' align='center' border='1'><a href='index.php'>Home</a></th>\n";
+    echo "  <th colspan='13' align='center' border='1'><a href='index.php'>Home</a></th>\n";
     echo " </tr>\n";
 
     echo "</table>\n";
