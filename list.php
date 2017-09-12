@@ -103,7 +103,12 @@
     }
     else
     {
-    $sql = "SELECT * FROM `Donation` INNER JOIN Vendor on Donation.Vendor = Vendor.Id WHERE Items = '$varType'";
+    $sql = "SELECT Donation.Id As RecordId, Donation.Vendor AS VendorId, Vendor.Contact AS Name, Vendor.Email AS Email,
+            Vendor.Vendor AS Vendor, Donation.Driver AS DriverId, Driver.Driver AS Driver, Donation.Items, 
+            Donation.ItemDesc, Donation.QuantityType, Donation.Quantity, Donation.Value, Donation.Weight, Donation.Date 
+            FROM `Donation` INNER JOIN Vendor on Donation.Vendor = Vendor.Id 
+            INNER JOIN Driver on Donation.Driver = Driver.Id 
+            WHERE Items = '$varType'";
     }
     if (!empty($_GET['sort']))
     {
