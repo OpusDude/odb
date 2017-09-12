@@ -31,13 +31,40 @@
         <td><input type="text" name="datet" id="datet" alt="date" class="IP_calendar" title="d/m/Y"></td>
         <td><input type="submit" value="Search" /></td>
        </form>
-      </tr>   
+      </tr>
+      <form name="add" method="post" action="add.php"> 
+        <tr> 
+          <td colspan="4" style="background:#6495ED; color:#FFFFFF; font-size:20px">Add Record:</td>
+        </tr> 
+        <tr>
+          <td>Select Vendor</td> 
+          <td><select name="Vendor">
+            <option value="">Select Vendor</option>
+            <?php
+             require 'creds.php';
+
+             $sql = "SELECT * FROM Vendor ORDER BY Vendor";
+             $result = $conn->query($sql);
+
+             if ( $result->num_rows > 0 ) 
+             {
+                while( $row = $result->fetch_assoc() ) 
+                {
+                  echo "   <option value=".$row['Id'];
+                  if ($_POST['Vendor'] === $row['Id']) echo ' selected="selected"';
+                  echo ">".$row['Vendor']." - ".$row['City']."</option>\n";
+                }
+             }
+            ?>
+            </select></td>
+          <td><input type="submit" value="Add" /></td> 
+        </tr> 
+      </form>
       <tr bgcolor="#6495ED" align=center> 
-        <td colspan="1" align=center><b><a href="add.php">Add Record</a></b></td> 
         <td colspan="1" align=center><b><a href="vendor.php">Add Vendor</a></b></td> 
+        <td colspan="1" align=center><b><a href="driver.php">Add Driver</a></b></td> 
         <td colspan="1" align=center><b><a href="list.php">List Records</a></b></td> 
       </tr> 
     </table> 
-    
  </body> 
 </html>

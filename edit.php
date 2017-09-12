@@ -12,20 +12,8 @@
     </head>
     <body>
  <?php
-    $serverName = "localhost";
-    $username   = "root";
-    $password   = "sbAXBP9*qdyE";
-    $dbname     = "ODB_DB";
-    $rec_id         = $_GET["id"];
+    require 'creds.php';
     
-    mysqli_report(MYSQLI_REPORT_ALL);
-    
-    $conn = mysqli_connect($serverName, $username, $password, $dbname);
-    if( $conn->connect_error ) {
-        echo "Connection could not be established.<br/>";
-        die($conn->connect_error);
-    }
-
     if($_POST["do"]=="update")
     {
         if(empty($_POST["Name"]))

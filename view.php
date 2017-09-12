@@ -11,17 +11,8 @@
                 <td colspan="4" style="background:#6495ED; color:black; font-size:20px" align="center">View System Record</td>
             </tr>
 <?php
-    $serverName = "localhost";
-    $username   = "root";
-    $password   = "sbAXBP9*qdyE";
-    $dbname     = "ODB_DB";
-    $rec_id     = $_GET["id"];
+    require 'creds.php';
 
-    $conn = mysqli_connect($serverName, $username, $password, $dbname);
-    if( $conn->connect_error ) {
-        echo "Connection could not be established.<br/>";
-        die($conn->connect_error);
-    }
     try
     {
         $sql    = "SELECT * FROM Donation WHERE Id = '".$rec_id."'";

@@ -20,21 +20,14 @@
         <td align="center"><b><font color="black">Date</font></b></td>
         <td>&nbsp;</td>
 <?php
- $serverName = "localhost";
- $username   = "root";
- $password   = "sbAXBP9*qdyE";
- $dbname     = "ODB_DB";
+ require 'creds.php';
+
  $search     = $_POST["search"];
  $holdFrom   = explode("/", $_POST["datef"]);
  $fromDate   = $holdFrom[2]. "-" .$holdFrom[1]. "-" .$holdFrom[0];
  $holdTo     = explode("/", $_POST["datet"]);
  $toDate     = $holdTo[2]. "-" .$holdTo[1]. "-" .$holdTo[0];
 
- $conn = mysqli_connect($serverName, $username, $password, $dbname);
- if( $conn->connect_error ) {
-     echo "Connection could not be established.<br/>";
-     die($conn->connect_error);
- }
  try
  {
    if (empty($search))
