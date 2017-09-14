@@ -13,19 +13,10 @@
     </head>
     <body>
 <?php
-    $serverName = "localhost";
-    $username   = "root";
-    $password   = "sbAXBP9*qdyE";
-    $dbname     = "ODB_DB";
+    require 'creds.php';
     $rec_id     = $_GET["id"];
     $secret     = "AYS";
 
-    $conn = mysqli_connect($serverName, $username, $password, $dbname);
-    if( $conn->connect_error ) {
-        echo "Connection could not be established.<br/>";
-        die($conn->connect_error);
-    }
-    
     if($_POST["do"]=="delete")
     { 
         if($_POST['password'] === $secret)

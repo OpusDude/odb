@@ -12,6 +12,7 @@
             </tr>
 <?php
     require 'creds.php';
+    $rec_id = $_GET["id"]; 
 
     try
     {

@@ -1,4 +1,4 @@
-<html>
+<!DOCTYPE html>
     <head>
      <meta name="description" content="Php Code for View, Search, Edit and Delete Record" />
      <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
@@ -12,10 +12,8 @@
     </head>
     <body>
  <?php
-    $serverName = "localhost";
-    $username   = "root";
-    $password   = "sbAXBP9*qdyE";
-    $dbname     = "ODB_DB";
+    require 'creds.php';
+
     if ( isset($_POST['Vendor']) )
     { 
         $vendor = $_POST["Vendor"];
@@ -24,14 +22,7 @@
     {
         $vendor = $_GET["Vendor"];
     }
-    
-    $conn = mysqli_connect($serverName, $username, $password, $dbname);
-    if( $conn->connect_error ) {
-        echo "Connection could not be established.<br/>";
-        die($conn->connect_error);
-    }
-
-    if($_POST["do"]=="store")
+    if(isset($_POST['do']) and $_POST["do"]=="store")
     {
         if(empty($_POST["Vendor"]))
         {
@@ -180,34 +171,36 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td><b>Select Item:</b><span class="note">*</span></td>
-                        <td><select name="Item">
-                            <option value="">Select Item</option>
-                            <option value="Baked Goods"<?php if ($_POST['Item'] === "Baked Goods") echo ' selected="selected"'; ?>>Baked Goods</option>
-                            <option value="Bread"<?php if ($_POST['Item'] === "Bread") echo ' selected="selected"'; ?>>Bread</option>
-                            <option value="Canned Goods"<?php if ($_POST['Item'] === "Canned Goods") echo ' selected="selected"'; ?>>Canned Goods</option>
-                            <option value="Coffee"<?php if ($_POST['Item'] === "Coffee") echo ' selected="selected"'; ?>>Coffee</option>
-                            <option value="Dairy"<?php if ($_POST['Item'] === "Dairy") echo ' selected="selected"'; ?>>Dairy</option>
-                            <option value="Fruit"<?php if ($_POST['Item'] === "Fruit") echo ' selected="selected"'; ?>>Fruit</option>
-                            <option value="Paper Products"<?php if ($_POST['Item'] === "Paper Products") echo ' selected="selected"'; ?>>Paper Products</option>
-                            <option value="Produce"<?php if ($_POST['Item'] === "Produce") echo ' selected="selected"'; ?>>Produce</option>
-                            <option value="Meat"<?php if ($_POST['Item'] === "Meat") echo ' selected="selected"'; ?>>Meat</option>
-                            <option value="Staples"<?php if ($_POST['Item'] === "Staples") echo ' selected="selected"'; ?>>Staples</option>
-                            <option value="Other"<?php if ($_POST['Item'] === "Other") echo ' selected="selected"'; ?>>Other</option>
-                        </select></td>
-                        <td><b>Item Description:</b><span class="note">*</span></td>
-                        <td><input type="text" name="ItemDesc" size="20" value="<?php echo $_POST['ItemDesc']; ?>"></td>
+                      <td><b>Select Item:</b><span class="note">*</span></td>
+                      <td><select name="Item">
+                           <option value="">Select Item</option>
+                      <?php
+                       $sql = "SELECT * FROM ItemType ORDER BY Item";
+                       $result = $conn->query($sql);
+                       if ( $result->num_rows > 0 ) 
+                       {
+                           while( $row = $result->fetch_assoc() ) 
+                           {
+                               echo "    <option value=\"".$row['Item']."\"";
+                               if (isset($_POST['Item']) and ($_POST['Item'] === $row['Item'])) echo ' selected="selected"';
+                               echo ">".$row['Item']."</option>\n";
+                           }
+                       }
+                      ?>
+                      </select></td>
+                      <td><b>Item Description:</b><span class="note">*</span></td>
+                      <td><input type="text" name="ItemDesc" size="20" value="<?php if(isset($_POST['ItemDesc'])) echo $_POST['ItemDesc']; ?>"></td>
                     </tr>
                     <tr>
-                        <td><p class="note"><?php echo $msg_item ?></p></td>
-                        <td></td>
-                        <td><p class="note"><?php echo $msg_itemdesc ?></p></td>
+                      <td><p class="note"><?php if(isset($msg_item)) echo $msg_item ?></p></td>
+                      <td></td>
+                      <td><p class="note"><?php if(isset($msg_itemdesc)) echo $msg_itemdesc ?></p></td>
                     </tr>
                     <tr>
-                        <td><b>Driver Name:</b><span class="note">*</span></td>
-                        <td><select name="Driver">
-                            <option value="">Select Driver</option>
-                        <?php
+                      <td><b>Driver Name:</b><span class="note">*</span></td>
+                      <td><select name="Driver">
+                          <option value="">Select Driver</option>
+                      <?php
                         $sql = "SELECT * FROM Driver Where Vendor=\"$vendor\" ORDER BY Driver";
                         $result = $conn->query($sql);
                         if ( $result->num_rows > 0 ) 
@@ -215,49 +208,56 @@
                             while( $row = $result->fetch_assoc() ) 
                             {
                                 echo "    <option value=".$row['Id'];
-                                if ($_POST['Driver'] === $row['Id']) echo ' selected="selected"';
+                                if (isset($_POST['Driver']) and $_POST['Driver'] === $row['Id']) echo ' selected="selected"';
                                 echo ">".$row['Driver']."</option>\n";
                             }
                         }
-                        ?>
-                        </select></td>
-                        <td><b>Quantity:</b><span class="note">*</span></td>
-                        <td><select name="QuantityType">
-                            <option value="">Select type</option>
-                            <option value="Bags"<?php if ($_POST['QuantityType'] === "Bags") echo ' selected="selected"'; ?>>Bags</option>
-                            <option value="Bins"<?php if ($_POST['QuantityType'] === "Bins") echo ' selected="selected"'; ?>>Bins</option>
-                            <option value="Boxes"<?php if ($_POST['QuantityType'] === "Boxes") echo ' selected="selected"'; ?>>Boxes</option>
-                            <option value="Crates"<?php if ($_POST['QuantityType'] === "Crates") echo ' selected="selected"'; ?>>Crates</option>
-                            <option value="Carts"<?php if ($_POST['QuantityType'] === "Carts") echo ' selected="selected"'; ?>>Carts</option>
-                            <option value="Other"<?php if ($_POST['QuantityType'] === "Other") echo ' selected="selected"'; ?>>Other</option>
-                        </select>
-                        <input type="text" name="Quantity" size="8" value="<?php echo $_POST['Quantity']; ?>"></td>
+                      ?>
+                      </select></td>
+                      <td><b>Quantity:</b><span class="note">*</span></td>
+                      <td><select name="QuantityType">
+                          <option value="">Select type</option>
+                       <?php
+                         $sql = "SELECT * FROM QuantityType ORDER BY Type";
+                         $result = $conn->query($sql);
+                         if ( $result->num_rows > 0 ) 
+                         {
+                             while( $row = $result->fetch_assoc() ) 
+                             {
+                                 echo "    <option value=\"".$row['Type']."\"";
+                                 if (isset($_POST['QuantityType']) and ($_POST['QuantityType'] === $row['Type'])) echo ' selected="selected"';
+                                 echo ">".$row['Type']."</option>\n";
+                             }
+                         }
+                      ?>
+                      </select>
+                      <input type="text" name="Quantity" size="8" value="<?php if(isset($_POST['Quantity'])) echo $_POST['Quantity']; ?>"></td>
                     </tr>
                     <tr>
-                        <td><p class="note"><?php echo $msg_driver ?></p></td>
-                        <td></td>
-                        <td><p class="note"><?php echo $msg_quantity ?></p></td>
+                      <td><p class="note"><?php if (isset($msg_driver)) echo $msg_driver ?></p></td>
+                      <td></td>
+                      <td><p class="note"><?php if (isset($msg_quantity)) echo $msg_quantity ?></p></td>
                     <tr>
-                        <td><b>Dollar Value:</b><span class="note">*</span></td>
-                        <td><input type="text" name="Value" size="8" value="<?php echo $_POST['Value']; ?>"></td>
-                        <td><b>Weight (lbs):</b><span class="note">*</span></td>
-                        <td><input type="text" name="Weight" size="8" value="<?php echo $_POST['Weight']; ?>"></td>
+                      <td><b>Dollar Value:</b><span class="note">*</span></td>
+                      <td><input type="text" name="Value" size="8" value="<?php if (isset($_POST['Value'])) echo $_POST['Value']; ?>"></td>
+                      <td><b>Weight (lbs):</b><span class="note">*</span></td>
+                      <td><input type="text" name="Weight" size="8" value="<?php if (isset($_POST['Weight'])) echo $_POST['Weight']; ?>"></td>
                     </tr>
                     <tr>
-                        <td><p class="note"><?php echo $msg_value ?></p></td>
-                        <td></td>
-                        <td><p class="note"><?php echo $msg_weight ?></p></td>
+                      <td><p class="note"><?php if (isset($msg_value)) echo $msg_value ?></p></td>
+                      <td></td>
+                      <td><p class="note"><?php if (isset($msg_weight)) echo $msg_weight ?></p></td>
                     </tr>
                     <tr>
-                        <td><p class="note"><b><?php echo $message ?></b></p></td>
-                        <td></td>
-                        <td colspan="4" align="right"><input type="hidden" name="do" value="store"><input type="submit" value="Add Record"></td>
+                      <td><p class="note"><b><?php if (isset($message)) echo $message ?></b></p></td>
+                      <td></td>
+                      <td colspan="4" align="right"><input type="hidden" name="do" value="store"><input type="submit" value="Add Record"></td>
                     </tr>
                     <tr>
-                        <td colspan="4">&nbsp;</td>
+                      <td colspan="4">&nbsp;</td>
                     </tr>
                     <tr bgcolor="#6495ED">
-                        <th colspan="4" align="center" border="1"><a href="index.php">Home</a></th>
+                      <th colspan="4" align="center" border="1"><a href="index.php">Home</a></th>
                     </tr>
                 </table>
             </form>

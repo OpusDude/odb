@@ -13,6 +13,7 @@
     <body>
  <?php
     require 'creds.php';
+    $rec_id = $_GET["id"]; 
     
     if($_POST["do"]=="update")
     {
