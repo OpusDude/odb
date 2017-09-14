@@ -13,7 +13,7 @@
  <?php
     require 'creds.php';
 
-    if($_POST["do"]=="store")
+    if(isset($_POST['do']) and $_POST["do"]=="store")
     {
         if(empty($_POST["Driver"]))
         {
@@ -52,19 +52,26 @@
         {
             try
             {
-                $sql = "INSERT INTO Driver (Driver, Email, Vendor, PhoneNumber)
-                VALUES ('$Driver', '$Email', '$Vendor', '$PhoneNumber')";
-
-		echo $sql;
-
-                if ($conn->query($sql) === TRUE)
+                $sql = "SELECT Driver FROM Driver WHERE Driver='$Driver'";
+                $result = $conn->query($sql);
+                if ( $result->num_rows > 0 )   
                 {
-                    $message = "New Driver created successfully";
-                    //header('Location: index.php');
+                    $message = "Driver already exists";
                 }
                 else
                 {
-                    $message = "Error: " . $sql . "<br>" . $conn->error;
+                    $sql = "INSERT INTO Driver (Driver, Email, Vendor, PhoneNumber)
+                    VALUES ('$Driver', '$Email', '$Vendor', '$PhoneNumber')";
+
+                    if ($conn->query($sql) === TRUE)
+                    {
+                        $message = "New Driver created successfully";
+                        //header('Location: index.php');
+                    }
+                    else
+                    {
+                        $message = "Error: " . $sql . "<br>" . $conn->error;
+                    }
                 }
             }
             catch(Exception $e)
@@ -86,15 +93,15 @@
           <center><h1><u>ODB Donation Database</u></h1></center>
           <center><h3><span class="note">*</span> denotes mandatory</h3></center>
             <form id="add_form" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-                <table style=" border:1px solid silver" cellpadding="5" cellspacing="0" align="center" border="1">
+                <table width="800" style=" border:1px solid silver" cellpadding="5" cellspacing="0" align="center" border="1">
                     <tr>
-                        <td colspan="6" style="background:#6495ED; color:black; font-size:20px" align="center">Current Drivers</td>
+                        <td colspan="6" style="background:#6495ED; color:#FFFFFF; font-size:20px" align="center">Current Drivers</td>
                     </tr>
                     <?php
                     try
                     {
                         $sql    = "SELECT Driver.Driver, Driver.Email, Driver.PhoneNumber,
-                                   Vendor.Vendor AS Vendor, Vendor.City AS City
+                                   Vendor.Vendor AS Vendor, Vendor.City AS City, Driver.Id
                                    FROM Driver INNER JOIN Vendor ON Driver.Vendor = Vendor.Id
                                    ORDER BY Driver";
 
@@ -104,12 +111,12 @@
                             while($row = $result->fetch_assoc()) 
                             {
                                 echo "            <tr>\n";
-                                echo "              <td>".$row['Driver']."</td>\n";
-                                echo "              <td>".$row['Email']."</td>\n";
-                                echo "              <td>".$row['PhoneNumber']."</td>\n";
-                                echo "              <td>".$row['Vendor']." - ".$row['City']."</td>\n";
-                                echo "              <td><a href=\"edititem.php?id=".$row['Id']."\"><b>Edit</b></a></td>\n";
-                                echo "              <td><a href=\"deleteitem.php?id=".$row['Id']."\"><b>Delete</b></a></td>\n";
+                                echo "              <td align=\"center\">".$row['Driver']."</td>\n";
+                                echo "              <td align=\"center\"><a href='mailto:".$row['Email']."'>".$row['Email']."</td>\n";
+                                echo "              <td align=\"center\">".$row['PhoneNumber']."</td>\n";
+                                echo "              <td align=\"center\">".$row['Vendor']." - ".$row['City']."</td>\n";
+                                echo "              <td align=\"center\"><a href=\"editdriver.php?id=".$row['Id']."\"><b>Edit</b></a></td>\n";
+                                echo "              <td align=\"center\"><a href=\"deletedriver.php?id=".$row['Id']."\"><b>Delete</b></a></td>\n";
                                 echo "            </tr>\n";
                             }
                         }
@@ -120,26 +127,27 @@
                     }
                     catch(Exception $e)
                     {
-                        echo $message = $e->getMessage();
                         if ( strpos($message, 'error in your SQL syntax') !== false )
                         {
                             $message = "Error: Verify there are no single quotes used in any field";
                         }
                     }
                     ?>
+                </table>
+                <table width="800" style=" border:1px solid silver" cellpadding="5" cellspacing="0" align="center" border="0">
                     <tr> 
-                      <td colspan="6" style="background:#6495ED; color:#FFFFFF; font-size:20px">Add Driver:</td>
-                    </tr> 
-                    <tr>
-                        <td><b>Driver Name:</b><span class="note">*</span></td>
-                        <td><input type="text" id="driver" name="Driver" size="25" value="<?php echo $_POST['Driver']; ?>"></td>
-                        <td><b>Driver Email:</b><span class="note">*</span></td>
-                        <td><input type="text" id=email name="Email" size="20" value="<?php echo $_POST['Email']; ?>"></td>
+                      <td align="center" colspan="6" style="background:#6495ED; color:#FFFFFF; font-size:20px">Add Driver</td>
                     </tr>
                     <tr>
-                        <td><p class="note"><?php echo $msg_driver ?></p></td>
+                        <td><b>Driver Name:</b><span class="note">*</span></td>
+                        <td><input type="text" id="driver" name="Driver" size="20" value="<?php if(isset($_POST['Driver'])) echo $_POST['Driver']; ?>"></td>
+                        <td><b>Driver Email:</b><span class="note">*</span></td>
+                        <td><input type="text" id=email name="Email" size="20" value="<?php if(isset($_POST['Email'])) echo $_POST['Email']; ?>"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><p class="note"><?php if(isset($msg_driver)) echo $msg_driver ?></p></td>
                         <td></td>
-                        <td><p class="note"><?php echo $msg_email ?></p></td>
+                        <td colspan="2"><p class="note"><?php if(isset($msg_email)) echo $msg_email ?></p></td>
                     </tr>
                     <tr>
                         <td><b>Select Vendor:</b><span class="note">*</span></td>
@@ -153,26 +161,24 @@
                             while( $row = $result->fetch_assoc() ) 
                             {
                                 echo "   <option value=".$row['Id'];
-                                if ($_POST['Vendor'] === $row['Id']) echo ' selected="selected"';
+                                if (isset($_POST['Vendor']) and $_POST['Vendor'] === $row['Id']) echo ' selected="selected"';
                                 echo ">".$row['Vendor']." - ".$row['City']."</option>\n";
                             }
                         }
                         ?>
                         </select></td>
                         <td><b>Phone Number:</b><span class="note">*</span></td>
-                        <td><input type="text" name="PhoneNumber" size="20" value="<?php echo $_POST['PhoneNumber']; ?>"></td>
+                        <td><input type="text" name="PhoneNumber" size="20" value="<?php if(isset($_POST['PhoneNumber'])) echo $_POST['PhoneNumber']; ?>"></td>
                     <tr>
-                        <td><p class="note"><?php echo $msg_vendor ?></p></td>
+                        <td colspan="2"><p class="note"><?php if(isset($msg_vendor)) echo $msg_vendor ?></p></td>
                         <td></td>
-                        <td><p class="note"><?php echo $msg_phonenumber ?></p></td>
+                        <td colspan="2"><p class="note"><?php if(isset($msg_phonenumber)) echo $msg_phonenumber ?></p></td>
                     </tr>
                     <tr>
-                        <td><p class="note"><b><?php echo $message ?></b></p></td>
-                        <td></td>
-                        <td colspan="6" align="right"><input type="hidden" name="do" value="store"><input type="submit" value="Add Driver"></td>
+                        <td colspan="6" align="center"><input type="hidden" name="do" value="store"><input type="submit" value="Add Driver"></td>
                     </tr>
                     <tr>
-                        <td colspan="6">&nbsp;</td>
+                        <td colspan="6" align="center"><p class="note"><b><?php if(isset($message)) echo $message ?></b></p></td>
                     </tr>
                     <tr bgcolor="#6495ED">
                         <th colspan="6" align="center" border="1"><a href="index.php">Home</a></th>

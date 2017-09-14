@@ -15,7 +15,7 @@
     $rec_id   = $_GET["id"];
     $msg_item = NULL;
     
-    if($_POST["do"]=="update")
+    if(isset($_POST['do']) and $_POST["do"]=="update")
     {
         if(empty($_POST["Item"]))
         {
@@ -65,39 +65,37 @@
       $result = $conn->query($sql);
       if ( $result->num_rows > 0 ) 
       {
-        while( $row = $result->fetch_assoc() ) 
-        { 
+        $row = $result->fetch_assoc();
       ?>
-      <form id="edit_form" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>?id=<?php echo $rec_id; ?>">
-              <table style=" border:1px solid silver" cellpadding="5" cellspacing="0" align="center" border="0">
-                 <tr>
-                   <td colspan="2" align="center" style="background:#6495ED; color:black; fontsize:20px"><b>Update Item</b></td>
-                 </tr>
-                 <tr>
-                   <td><b>Enter Item:</b><span class="note">*</span></td>
-                   <td><input type="text" id="item" name="Item" size="10" value = '<?php echo $row['Item']; ?>'></td>
-                 </tr>
-                 <tr>
-                    <td><p class="note"><?php echo $msg_item ?></p></td>
-                 </tr>
-                 <tr>
-                   <td colspan="4" align="center"><input type="hidden" name="do" value="update"><input type="submit" value="Update Record"></td>
-                 </tr>
-                 <?php
-                 if (!empty($message))
-                 {
-                    echo "<tr>\n";
-                    echo "                    <td colspan=\"2\" align=\"center\"><p class=\"note\"><b>$message</b></td>\n";
-                    echo "                  <tr>\n";
-                 }
-                 ?>
-                 <tr bgcolor="#6495ED">
-                     <th colspan="4" align="center" border="1"><a href="index.php">Home</a></th>
-                 </tr>
-             </table>
-           </form>
+        <form id="edit_form" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>?id=<?php echo $rec_id; ?>">
+          <table style=" border:1px solid silver" cellpadding="5" cellspacing="0" align="center" border="0">
+            <tr>
+              <td colspan="2" align="center" style="background:#6495ED; color:#FFFFFF; fontsize:20px"><b>Update Item</b></td>
+            </tr>
+            <tr>
+              <td><b>Enter Item:</b><span class="note">*</span></td>
+              <td><input type="text" id="item" name="Item" size="10" value = '<?php echo $row['Item']; ?>'></td>
+            </tr>
+            <tr>
+              <td><p class="note"><?php echo $msg_item ?></p></td>
+            </tr>
+            <tr>
+              <td colspan="4" align="center"><input type="hidden" name="do" value="update"><input type="submit" value="Update Record"></td>
+            </tr>
+            <?php
+            if (!empty($message))
+            {
+               echo "<tr>\n";
+               echo "                    <td colspan=\"2\" align=\"center\"><p class=\"note\"><b>$message</b></td>\n";
+               echo "                  <tr>\n";
+            }
+            ?>
+            <tr bgcolor="#6495ED">
+              <th colspan="4" align="center" border="1"><a href="index.php">Home</a></th>
+            </tr>
+          </table>
+        </form>
       <?php
-        }
       }
       ?>
   </div>

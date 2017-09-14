@@ -14,16 +14,16 @@
         <center><h1><u>ODB Donation Database</u></h1></center>
         <center><h3><span class="note">*</span> denotes mandatory</h3></center>
          <form name="items" method="post" action="/items.php"> 
-          <table style=" border:1px solid silver" cellpadding="5" cellspacing="0" align="center" border="1">
+          <table width="400" style="border:1px solid silver" cellpadding="5" cellspacing="0" align="center" border="1">
             <tr>
-                <td colspan="4" style="background:#6495ED; color:black; font-size:20px" align="center">Current Items</td>
+                <td alighn="center" colspan="4" style="background:#6495ED; color:#FFFFFF; font-size:20px" align="center">Current Items</td>
             </tr>
 <?php
     require 'creds.php';
     $newitem = NULL;
     $message = NULL;
 
-    if($_POST['do']=="store") 
+    if(isset($_POST['do']) and $_POST['do']=="store") 
     {
         try
         {
@@ -65,7 +65,6 @@
             }
         }
     }
-
     try
     {
         $sql    = "SELECT * FROM ItemType ORDER BY Item";
@@ -75,7 +74,7 @@
             while($row = $result->fetch_assoc()) 
             {
                 echo "            <tr>\n";
-                echo "              <td colspan=\"2\" align=\"center\">".$row['Item']."</td>\n";
+                echo "              <td width=\"250\" colspan=\"2\" align=\"center\">".$row['Item']."</td>\n";
                 echo "              <td colspan=\"1\" align=\"center\"><a href=\"edititem.php?id=".$row['Id']."\"><b>Edit</b></a></td>\n";
                 echo "              <td colspan=\"1\" align=\"center\"><a href=\"deleteitem.php?id=".$row['Id']."\"><b>Delete</b></a></td>\n";
                 echo "            </tr>\n";
@@ -95,12 +94,14 @@
         }
     }
 ?>
+          </table>
+          <table width="400" style="border:1px solid silver" cellpadding="5" cellspacing="0" align="center" border="0">
            <tr> 
-             <td colspan="4" style="background:#6495ED; color:#FFFFFF; font-size:20px">Add Item:</td>
+             <td align="center" colspan="4" style="background:#6495ED; color:#FFFFFF; font-size:20px">Add Item</td>
            </tr> 
            <tr>
              <td><b>Enter New Item:</b><span class="note">*</span></td>
-             <td><input type="text" name="Item" size="20" value="<?php echo $_POST['Item']; ?>"></td>
+             <td><input type="text" name="Item" size="20" value="<?php if(isset($_POST['Item'])) echo $_POST['Item']; ?>"></td>
              <td colspan="2" align="center"><input type="hidden" name="do" value="store"><input type="submit" value="Add"></td> 
            </tr>
            <?php

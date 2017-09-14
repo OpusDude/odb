@@ -22,42 +22,64 @@
 <?php
  require 'creds.php';
 
- $search     = $_POST["search"];
- $holdFrom   = explode("/", $_POST["datef"]);
- $fromDate   = $holdFrom[2]. "-" .$holdFrom[1]. "-" .$holdFrom[0];
- $holdTo     = explode("/", $_POST["datet"]);
- $toDate     = $holdTo[2]. "-" .$holdTo[1]. "-" .$holdTo[0];
+ if (isset($_POST['search']))
+ {
+    $search     = $_POST["search"];
+ }
+ if (isset($_POST['datef']) and isset($_POST['datet']))
+ {
+    $holdFrom   = explode("/", $_POST["datef"]);
+    $fromDate   = $holdFrom[2]. "-" .$holdFrom[1]. "-" .$holdFrom[0];
+    $holdTo     = explode("/", $_POST["datet"]);
+    $toDate     = $holdTo[2]. "-" .$holdTo[1]. "-" .$holdTo[0];
+ }
 
  try
  {
    if (empty($search))
    {
-     $sql  = "SELECT * FROM Donation WHERE Date > '$fromDate' AND Date < '$toDate'";
+     $sql = "SELECT Donation.Id As Id, Donation.Vendor AS VendorId, Vendor.Contact AS Name, Vendor.Email AS Email,
+     Vendor.Vendor AS Vendor, Donation.Driver AS DriverId, Driver.Driver AS Driver, Donation.Items, 
+     Donation.ItemDesc, Donation.QuantityType, Donation.Quantity, Donation.Value, Donation.Weight, Donation.Date 
+     FROM `Donation` INNER JOIN Vendor on Donation.Vendor = Vendor.Id 
+     INNER JOIN Driver on Donation.Driver = Driver.Id WHERE Date > '$fromDate' AND Date < '$toDate'";
+
      $sqlw = "SELECT SUM(Weight) as sum_weight FROM Donation WHERE Date > '$fromDate' AND Date < '$toDate'";
      $sqlv = "SELECT SUM(Value) as sum_value FROM Donation WHERE Date > '$fromDate' AND Date < '$toDate'";
    }
    else
    {
-     $sql  = "SELECT * FROM Donation WHERE Name   LIKE '%$search%' 
-                                      OR Vendor   LIKE '%$search%'
-                                      OR Email    LiKE '%$search%'
-                                      OR Driver   LIKE '%$search%'
-                                      OR Items    Like '%$search%'
-                                      OR ItemDesc LIKE '%$search%'";
+     $sql = "SELECT Donation.Id As Id, Donation.Vendor AS VendorId, Vendor.Contact AS Name, Vendor.Email AS Email,
+     Vendor.Vendor AS Vendor, Donation.Driver AS DriverId, Driver.Driver AS Driver, Donation.Items, 
+     Donation.ItemDesc, Donation.QuantityType, Donation.Quantity, Donation.Value, Donation.Weight, Donation.Date 
+     FROM `Donation` INNER JOIN Vendor on Donation.Vendor = Vendor.Id 
+     INNER JOIN Driver on Donation.Driver = Driver.Id 
+     WHERE Vendor.Contact   LIKE '%$search%' 
+     OR Vendor.Vendor       LIKE '%$search%'
+     OR Vendor.Email        LiKE '%$search%'
+     OR Driver.Driver       LIKE '%$search%'
+     OR Items               Like '%$search%'
+     OR ItemDesc            LIKE '%$search%'";
 
-     $sqlw = "SELECT SUM(Weight) as sum_weight FROM Donation WHERE Name   LIKE '%$search%' 
-                                                              OR Vendor   LIKE '%$search%'
-                                                              OR Email    LiKE '%$search%'
-                                                              OR Driver   LIKE '%$search%'
-                                                              OR Items    Like '%$search%'
-                                                              OR ItemDesc LIKE '%$search%'";
+     $sqlw = "SELECT SUM(Weight) as sum_weight FROM Donation
+              INNER JOIN Vendor on Donation.Vendor = Vendor.Id 
+              INNER JOIN Driver on Donation.Driver = Driver.Id 
+              WHERE Vendor.Contact LIKE '%$search%' 
+                 OR Vendor.Vendor  LIKE '%$search%'
+                 OR Vendor.Email   LIKE '%$search%'
+                 OR Driver.Driver  LIKE '%$search%'
+                 OR Items          LIke '%$search%'
+                 OR ItemDesc       LIKE '%$search%'";
 
-     $sqlv = "SELECT SUM(Value) as sum_value FROM Donation WHERE Name   LIKE '%$search%' 
-                                                            OR Vendor   LIKE '%$search%'
-                                                            OR Email    LiKE '%$search%'
-                                                            OR Driver   LIKE '%$search%'
-                                                            OR Items    Like '%$search%'
-                                                            OR ItemDesc LIKE '%$search%'";
+     $sqlv = "SELECT SUM(Value) as sum_value FROM Donation
+              INNER JOIN Vendor on Donation.Vendor = Vendor.Id 
+              INNER JOIN Driver on Donation.Driver = Driver.Id 
+              WHERE Vendor.Contact LIKE '%$search%' 
+              OR Vendor.Vendor     LIKE '%$search%'
+              OR Vendor.Email      LIKE '%$search%'
+              OR Driver.Driver     LIKE '%$search%'
+              OR Items             LIKE '%$search%'
+              OR ItemDesc          LIKE '%$search%'";
    }
      $result = $conn->query($sql);
      if ( $result->num_rows > 0 ) 
@@ -93,9 +115,9 @@
      }
      else
      {
-       echo "<tr>";
-       echo "  <td colspan='11' align='center' style='color:red'>Record not found</td>";
-       echo "</tr>";
+       echo "<tr>\n";
+       echo "  <td colspan='11' align='center' style='color:red'>Record not found</td>\n";
+       echo "</tr>\n";
      }
  }
 catch(Exception $e)
@@ -108,9 +130,9 @@ catch(Exception $e)
 }
 ?>
       <tr>
-        <td colspan="3" align="center"><b>Number of Items: <?php echo $numItems; ?></b></td>
-        <td colspan="4" align="center"><b>Total Weight (lbs): <?php echo $totalWeight['sum_weight']; ?></b></td>
-        <td colspan="4" align="center"><b>Total Value: $<?php echo round($totalValue['sum_value'],2); ?></b></td>
+        <td colspan="3" align="center"><b>Number of Items: <?php if(isset($numItems)) echo $numItems; ?></b></td>
+        <td colspan="4" align="center"><b>Total Weight (lbs): <?php if(isset($totalWeight)) echo $totalWeight['sum_weight']; ?></b></td>
+        <td colspan="4" align="center"><b>Total Value: $<?php if(isset($totalValue)) echo round($totalValue['sum_value'],2); ?></b></td>
       </tr>
       <tr bgcolor="#6495ED">
         <th colspan="11" align="center"><a href="index.php">Home</a></th>

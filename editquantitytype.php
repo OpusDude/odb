@@ -15,7 +15,7 @@
     $rec_id   = $_GET["id"];
     $msg_type = NULL;
     
-    if($_POST["do"]=="update")
+    if(isset($_POST['do']) and $_POST["do"]=="update")
     {
         if(empty($_POST["Type"]))
         {

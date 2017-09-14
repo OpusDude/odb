@@ -1,0 +1,221 @@
+<html>
+    <head>
+     <meta name="description" content="Php Code for View, Search, Edit and Delete Record" />
+     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+     <title>Add ODB Vendor</title>
+     <style type="text/css">
+        h1 {margin-bottom:20px}
+        input, label {margin-top:7px; margin-bottom:7px; color:black; font-size: 14px; padding-right: 7px}
+        .note {color: #ff0000}
+     </style>
+    </head>
+    <body>
+ <?php
+    require 'creds.php';
+    $rec_id   = $_GET["id"];
+
+    if(isset($_POST['do']) and $_POST["do"]=="update")
+    {
+        if(empty($_POST["Vendor"]))
+        {
+            $msg_vendor = "You must supply a vendor name";
+        }
+        else 
+        {
+            $Vendor = $_POST["Vendor"];
+        }
+        if(empty($_POST["Contact"]))
+        {
+            $msg_contact = "You must supply a contact name";
+        }
+        else 
+        {
+            $Contact = $_POST["Contact"];
+        }
+        if(empty($_POST["Email"]))
+        {
+            $msg_email = "You must supply an email address";
+        }
+        else 
+        {
+            $Email = $_POST["Email"];
+        }
+        if(empty($_POST["Address"]))
+        {
+            $msg_address = "You must supply an address";
+        }
+        else 
+        {
+            $Address = $_POST["Address"];
+        }
+        if(empty($_POST["City"]))
+        {
+            $msg_city = "You must supply a city";
+        }
+        else
+        {
+            $City = $_POST["City"];
+        }
+        if(empty($_POST["State"]))
+        {
+            $msg_state = "You must supply a state";
+        }
+        else
+        {
+            $State = $_POST["State"];
+        }
+        if(empty($_POST["ZipCode"]))
+        {
+            $msg_zipcode = "You must enter a zip code";
+        }
+        else
+        {
+            $ZipCode = $_POST["ZipCode"];
+        }
+        if(empty($_POST["PhoneNumber"]))
+        {
+            $msg_phonenumber = "You must enter a phone number";
+        }
+        else
+        {
+            $PhoneNumber = $_POST["PhoneNumber"];
+        }
+        
+        if ($msg_vendor == "" && $msg_contact == "" && $msg_email == "" && $msg_address == "" && 
+            $msg_city == "" && $msg_state == "" && $msg_zipcode == "" && $msg_phonenumber == "")
+        {
+            try
+            {
+                $sql = "UPDATE Vendor SET Vendor = '$Vendor', Contact = '$Contact',
+                Email = '$Email', Address = '$Address', City = '$City', State = '$State',
+                ZipCode = '$ZipCode', PhoneNumber = '$PhoneNumber'
+                WHERE Id = '$rec_id'";
+
+                if ($conn->query($sql) === TRUE)
+                {
+                    $message = "Vendor updated successfully";
+                    //header('Location: index.php');
+                }
+                else
+                {
+                    $message = "Error: " . $sql . "<br>" . $conn->error;
+                }
+            }
+            catch(Exception $e)
+            {
+                $message = $e->getMessage();
+                if ( strpos($message, 'error in your SQL syntax') !== false )
+                {
+                    $message = "Error: Verify there are no single quotes used in any field";
+                }
+            }
+        }
+        else
+        { 
+            $message = "A field is not formatted correctly";
+        }
+    }
+?>
+       <div class="container">
+          <center><h1><u>ODB Donation Database</u></h1></center>
+          <center><h3><span class="note">*</span> denotes mandatory</h3></center>
+        <?php
+        try
+        {
+            $sql    = "SELECT * FROM Vendor WHERE Vendor.Id = '$rec_id'";
+            $result = $conn->query($sql);
+            if ( $result->num_rows > 0 ) 
+            {
+                $row = $result->fetch_assoc();
+        ?>            
+        <form id="edit_form" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>?id=<?php echo $rec_id; ?>">
+         <table style="border:1px solid silver" cellpadding="5" cellspacing="0" align="center" border="0">
+          <tr>
+            <td align="center" colspan="10" style="background:#6495ED; color:#FFFFFF; fontsize:20px"><b>Update Vendor</b></td>
+          </tr>
+          <tr>
+            <td><b>Vendor Name:</b><span class="note">*</span></td>
+            <td><input type="text" id="vendor" name="Vendor" size="25" value="<?php if (isset($row['Vendor'])) echo $row['Vendor']; ?>"></td>
+            <td><b>Contact Name:</b><span class="note">*</span></td>
+            <td><input type="text" id=contact name="Contact" size="20" value="<?php if (isset($row['Contact'])) echo $row['Contact']; ?>"></td>
+          </tr>
+          <tr>
+            <td><p class="note"><?php if (isset($_msg_vendor)) echo $msg_vendor ?></p></td>
+            <td></td>
+            <td><p class="note"><?php if (isset($msg_contact)) echo $msg_contact ?></p></td>
+          </tr>
+          <tr>
+            <td><b>Email:</b><span class="note">*</span></td>
+            <td><input type="text" id="email" name="Email" size="25" value = '<?php if (isset($row['Email'])) echo $row['Email']; ?>'></td>
+            <td><b>Street Address:</b><span class="note">*</span></td>
+            <td><input type="text" id="address" name="Address" size="20" value="<?php if (isset($row['Address'])) echo $row['Address']; ?>"></td>
+          </tr>
+          <tr>
+            <td><p class="note"><?php if (isset($msg_email)) echo $msg_email ?></p></td>
+            <td></td>
+            <td><p class="note"><?php if (isset($msg_address)) echo $msg_address ?></p></td>
+          <tr>
+            <td><b>Select City:</b><span class="note">*</span></td>
+            <td><select name="City">
+                <option value="">Select City</option>
+                <option value="Cincinnati"<?php if (isset($row['City']) and $row['City'] === "Cincinnati") echo ' selected="selected"'; ?>>Cincinnati</option>
+                <option value="Blue Ash"<?php if (isset($row['City']) and $row['City'] === "Blue Ash") echo ' selected="selected"'; ?>>Blue Ash</option>
+                <option value="Madeira"<?php if (isset($row['City']) and $row['City'] === "Madeira") echo ' selected="selected"'; ?>>Madeira</option>
+                <option value="Mason"<?php if (isset($row['City']) and $row['City'] === "Mason") echo ' selected="selected"'; ?>>Mason</option>
+                <option value="Norwood"<?php if (isset($row['City']) and $row['City'] === "Norwood") echo ' selected="selected"'; ?>>Norwood</option>
+                <option value="Sharonville"<?php if (isset($row['City']) and $row['City'] === "Sharonville") echo ' selected="selected"'; ?>>Sharonville</option>
+                <option value="Other"<?php if (isset($row['City']) and $row['City'] === "Other") echo ' selected="selected"'; ?>>Other</option>
+            </select></td>
+            <td><b>Select State:</b><span class="note">*</span></td>
+            <td><select name="State">
+                <option value="">Select State</option>
+                <option value="KY"<?php if (isset($row['State']) and $row['State'] === "KY") echo ' selected="selected"'; ?>>KY</option>
+                <option value="IN"<?php if (isset($row['State']) and $row['State'] === "IN") echo ' selected="selected"'; ?>>IN</option>
+                <option value="OH"<?php if (isset($row['State']) and $row['State'] === "OH") echo ' selected="selected"'; ?>>OH</option>
+                <option value="Other"<?php if (isset($row['State']) and $row['State'] === "Other") echo ' selected="selected"'; ?>>Other</option>
+            </select></td>
+          </tr>
+          <tr>
+            <td><p class="note"><?php if (isset($msg_city)) echo $msg_city ?></p></td>
+            <td></td>
+            <td><p class="note"><?php if (isset($msg_state)) echo $msg_state ?></p></td>
+          </tr>
+          <tr>
+            <td><b>Zip Code:</b><span class="note">*</span></td>
+            <td><input type="text" name="ZipCode" size="20" value="<?php if (isset($row['ZipCode'])) echo $row['ZipCode']; ?>"></td>
+            <td><b>Phone Number:</b><span class="note">*</span></td>
+            <td><input type="text" name="PhoneNumber" size="20" value="<?php if (isset($row['PhoneNumber'])) echo $row['PhoneNumber']; ?>"></td>
+          </tr>
+          <tr>
+            <td><p class="note"><?php if (isset($msg_zipcode)) echo $msg_zipcode ?></p></td>
+            <td></td>
+            <td><p class="note"><?php if (isset($msg_phonenumber)) echo $msg_phonenumber ?></p></td>
+          </tr>
+            <td colspan="10" align="center"><input type="hidden" name="do" value="update"><input type="submit" value="Update Vendor"></td>
+          </tr>
+          <tr>
+            <td colspan="10" align="center"><p class="note"><b><?php if (isset($message)) echo $message ?></b></p></td>
+          </tr>
+          <tr bgcolor="#6495ED">
+            <th colspan="4" align="center" border="1"><a href="index.php">Home</a></th>
+          </tr>
+         </table>
+        </form>
+        <?php
+            }
+            else 
+            {
+                $message = "Query returned zero results";  
+            }
+        }
+        catch(Exception $e)
+        {
+            if ( strpos($message, 'error in your SQL syntax') !== false )
+            {
+                $message = "Error: Verify there are no single quotes used in any field";
+            }
+        }
+        ?>
+        </div>
+    </body>
+</html>

@@ -20,11 +20,11 @@
     { 
         if($_POST['password'] === $secret)
         {
-            $sql = "DELETE FROM ItemType WHERE Id = '$rec_id'";
+            $sql = "DELETE FROM Driver WHERE Id = '$rec_id'";
     
             if ($conn->query($sql) === TRUE)
             {
-                $message = "Item '" .$_POST['Item']. "' successfully deleted from database";
+                $message = "Driver '" .$_POST['Driver']. "' successfully deleted from database";
             }
             else 
             {
@@ -42,18 +42,18 @@
          <form id="delete_form" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>?id=<?php echo $rec_id; ?>">
           <table width="400" style="border:1px solid silver" cellpadding="5" cellspacing="0" align="center" border="1">
             <tr>
-              <td colspan="2" style="background:#6495ED; color:#FFFFFF; font-size:20px" align="center">Delete Item</td>
+              <td colspan="2" style="background:#6495ED; color:#FFFFFF; font-size:20px" align="center">Delete Driver</td>
             </tr>
             <?php
-            $sql    = "SELECT * FROM ItemType WHERE Id = '$rec_id'";
+            $sql    = "SELECT * FROM Driver WHERE Id = '$rec_id'";
             $result = $conn->query($sql);
             if ( $result->num_rows > 0 ) 
             {
                while($row = $result->fetch_assoc()) 
                {
                   echo "<tr>\n";
-                  echo "             <td colspan=\"1\" align=\"center\"><b>Item:</b></td>\n";
-                  echo "             <td colspan=\"1\" align=\"center\"><input type=\"hidden\" name=\"Item\" value=\"".$row['Item']."\">".$row['Item']."</td>\n";
+                  echo "             <td colspan=\"1\" align=\"center\"><b>Driver:</b></td>\n";
+                  echo "             <td colspan=\"1\" align=\"center\"><input type=\"hidden\" name=\"Driver\" value=\"".$row['Driver']."\">".$row['Driver']."</td>\n";
                   echo "            </tr>\n";
                 }
             }
@@ -65,14 +65,9 @@
               <td><input type="password" id="password" name="password" size="10"></td>
               <td colspan="4" align="right"><input type="hidden" name="do" value="delete"><input type="submit" value="Delete Record"></td>
             </tr>
-            <?php
-             if (!empty($message))
-             {
-                echo "<tr>\n";
-                echo "              <td colspan=\"4\" align=\"center\"><p class=\"note\"><b>$message</b></td>\n";
-                echo "            <tr>\n";
-             }
-           ?>
+            <tr>
+                <td colspan="4" align="center"><p class="note"><b><?php if(isset($message)) echo $message ?></b></td>
+              <tr>
             <tr bgcolor="#6495ED">
               <th colspan="4" align="center" border="1"><a href="index.php">Home</a></th>
             </tr>

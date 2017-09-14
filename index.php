@@ -21,7 +21,7 @@
      <form name="search" method="post" action="search.php"> 
       <table width="600" style="border:1px solid silver" cellpadding="10px" cellspacing="0px" align="center"> 
         <tr> 
-         <td colspan="3" style="background:#6495ED; color:#FFFFFF; font-size:20px">Search by subject:</td>
+         <td align="center" colspan="3" style="background:#6495ED; color:#FFFFFF; font-size:20px">Search by subject</td>
         </tr> 
         <tr>
          <td>Enter search criteria:</td> 
@@ -33,7 +33,7 @@
      <form name="searchDate" action="search.php" method="POST">
       <table width="600" style="border:1px solid silver" cellpadding="10px" cellspacing="0px" align="center"> 
        <tr> 
-        <td colspan="3" style="background:#6495ED; color:#FFFFFF; font-size:20px">Search by date:</td>
+        <td align="center" colspan="3" style="background:#6495ED; color:#FFFFFF; font-size:20px">Search by date</td>
        </tr> 
        <tr>
         <td><label for="fromDate">From Date:</label></td>
@@ -49,7 +49,7 @@
      <form name="add" method="post" action="/add.php" onsubmit="return validate()">
       <table width="600" style="border:1px solid silver" cellpadding="10px" cellspacing="0px" align="center"> 
        <tr> 
-         <td colspan="4" style="background:#6495ED; color:#FFFFFF; font-size:20px">Add Record:</td>
+         <td align="center" colspan="4" style="background:#6495ED; color:#FFFFFF; font-size:20px">Add Record</td>
        </tr> 
        <tr>
          <td>Select Vendor:</td> 

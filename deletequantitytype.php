@@ -16,7 +16,7 @@
     $secret  = "AYS";
     $message = NULL;
 
-    if($_POST["do"]=="delete")
+    if(isset($_POST['do']) and $_POST["do"]=="delete")
     { 
         if($_POST['password'] === $secret)
         {
@@ -40,9 +40,9 @@
       <div class="container">
          <center><h1><u>ODB Donation Database</u></h1></center>
          <form id="delete_form" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>?id=<?php echo $rec_id; ?>">
-          <table style=" border:1px solid silver" cellpadding="5" cellspacing="0" align="center" border="1">
+          <table width="400" style=" border:1px solid silver" cellpadding="5" cellspacing="0" align="center" border="1">
             <tr>
-              <td colspan="4" style="background:#6495ED; color:black; font-size:20px" align="center">Delete Item</td>
+              <td colspan="2" style="background:#6495ED; color:#FFFFFF; font-size:20px" align="center">Delete Item</td>
             </tr>
             <?php
             $sql    = "SELECT * FROM QuantityType WHERE Id = '$rec_id'";
@@ -52,12 +52,14 @@
                while($row = $result->fetch_assoc()) 
                {
                   echo "<tr>\n";
-                  echo "             <td><b>Type:</b></td>\n";
-                  echo "             <td><input type=\"hidden\" name=\"Type\" value=\"".$row['Type']."\">".$row['Type']."</td>\n";
+                  echo "             <td align=\"center\"><b>Type:</b></td>\n";
+                  echo "             <td align=\"center\"><input type=\"hidden\" name=\"Type\" value=\"".$row['Type']."\">".$row['Type']."</td>\n";
                   echo "            </tr>\n";
                 }
             }
             ?>
+          </table>
+          <table width="400" style=" border:1px solid silver" cellpadding="5" cellspacing="0" align="center" border="0">
             <tr>
               <td><b>Enter Password:</b></td>
               <td><input type="password" id="password" name="password" size="10"></td>

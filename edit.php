@@ -154,138 +154,134 @@
           <center><h3 class="success_msg"><?php echo $msg_success; ?></h3></center>
 
       <?php
-      $sql = "SELECT * FROM Donation WHERE Id = '".$rec_id."'";
+      $sql = "SELECT Donation.Id As Id, Donation.Vendor AS VendorId, Vendor.Contact AS Name, Vendor.Email AS Email,
+      Vendor.Vendor AS Vendor, Donation.Driver AS DriverId, Driver.Driver AS Driver, Donation.Items, 
+      Donation.ItemDesc, Donation.QuantityType, Donation.Quantity, Donation.Value, Donation.Weight, Donation.Date 
+      FROM `Donation` INNER JOIN Vendor on Donation.Vendor = Vendor.Id 
+      INNER JOIN Driver on Donation.Driver = Driver.Id WHERE Donation.Id = '".$rec_id."'";
+      
       $result = $conn->query($sql);
       if ( $result->num_rows > 0 ) 
       {
         while( $row = $result->fetch_assoc() ) 
         { 
       ?>
-
-            <form id="edit_form" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>?id=<?php echo $rec_id; ?>">
-                <table style=" border:1px solid silver" cellpadding="5" cellspacing="0" align="center" border="0">
-                    <tr>
-                        <td colspan="4" style="background:#6495ED; color:black; fontsize:20px">Add ODB Donation Record</td>
-                    </tr>
-                    <tr>
-                        <td><b>Enter Name:</b><span class="note">*</span></td>
-                        <td><input type="text" id="name" name="Name" size="25" value = '<?php echo $row['Name']; ?>'></td>
-                        <td><b>Enter Email:</b><span class="note">*</span></td>
-                        <td><input type="text" name="Email" size="20" value="<?php echo $row['Email']; ?>"></td>
-                    </tr>
-                    <tr>
-                        <td><p class="note"><?php echo $msg_name ?></p></td>
-                        <td></td>
-                        <td><p class="note"><?php echo $msg_email ?></p></td>
-                    </tr>
-                    <tr>
-                        <td><b>Select Vendor:</b><span class="note">*</span></td>
-                        <td><select name="Vendor">
-                            <option value="">Select Vendor</option>
-                            <option value="Avril's Deli Meats"<?php if ($row['Vendor'] === "Avrils Deli Meats") echo ' selected="selected"'; ?>>Avrils Deli Meats</option>
-                            <option value="Brezel Pretzels"<?php if ($row['Vendor'] === "Brezel Pretzels") echo ' selected="selected"'; ?>>Brezel Pretzels</option>
-                            <option value="Busken Bakery - Madison Rd"<?php if ($row['Vendor'] === "Busken Bakery - Madison Rd") echo ' selected="selected"'; ?>>Busken Bakery - Madison Rd</option>
-                            <option value="Costco - Mason"<?php if ($row['Vendor'] === "Costco - Mason") echo ' selected="selected"'; ?>>Costco - Mason</option>
-                            <option value="Club Chef"<?php if ($row['Vendor'] === "Club Chef") echo ' selected="selected"'; ?>>Club Chef</option>
-                            <option value="Edible Arrangements - Glenway Ave"<?php if ($row['Vendor'] === "Edible Arrangements - Glenway Ave") echo ' selected="selected"'; ?>>Edible Arrangements - Glenway Ave</option>
-                            <option value="Edible Arrangements - Hosbrook"<?php if ($row['Vendor'] === "Edible Arrangements - Hosbrook") echo ' selected="selected"'; ?>>Edible Arrangements - Hosbrook</option>
-                            <option value="Gigis Cupcakes"<?php if ($row['Vendor'] === "Gigis Cupcakes") echo ' selected="selected"'; ?>>Gigis Cupcakes</option>
-                            <option value="Krogers - Blue Ash"<?php if ($row['Vendor'] === "Krogers - Blue Ash") echo ' selected="selected"'; ?>>Krogers - Blue Ash</option>
-                            <option value="Krogers - Madeira"<?php if ($row['Vendor'] === "Krogers - Madeira") echo ' selected="selected"'; ?>>Krogers - Madeira</option>
-                            <option value="Krogers - Sharonville"<?php if ($row['Vendor'] === "Krogers - Sharonville") echo ' selected="selected"'; ?>>Krogers - Sharonville</option>
-                            <option value="Mason Food Pantry"<?php if ($row['Vendor'] === "Mason Food Pantry") echo ' selected="selected"'; ?>>Mason Food Pantry</option>
-                            <option value="Sixteen Bricks"<?php if ($row['Vendor'] === "Sixteen Bricks") echo ' selected="selected"'; ?>>Sixteen Bricks</option>
-                            <option value="Other"<?php if ($row['Vendor'] !== "Avrils Deli Meats" &&
-                                                           $row['Vendor'] !== "Brezel Pretzels" &&
-                                                           $row['Vendor'] !== "Busken Bakery - Madison Rd" &&
-                                                           $row['Vendor'] !== "Costco - Mason" &&
-                                                           $row['Vendor'] !== "Club Chef" &&
-                                                           $row['Vendor'] !== "Edible Arrangements - Glenway Ave" &&
-                                                           $row['Vendor'] !== "Edible Arrangements - Hosbrook" &&
-                                                           $row['Vendor'] !== "Gigis Cupcakes" &&
-                                                           $row['Vendor'] !== "Krogers - Blue Ash" &&
-                                                           $row['Vendor'] !== "Krogers - Madeira" &&
-                                                           $row['Vendor'] !== "Krogers - Sharonville" &&
-                                                           $row['Vendor'] !== "Mason Food Pantry" &&
-                                                           $row['Vendor'] !== "Sixteen Bricks") echo ' selected="selected"'; ?>>Other</option>
-                        </select></td>
-                        <td><b>Enter Vendor:</b></td>
-                        <td><input type="text" name="VendorOther" size="20" value="<?php if ($row['Vendor'] !== "Avrils Deli Meats" &&
-                                                                                             $row['Vendor'] !== "Brezel Pretzels" &&
-                                                                                             $row['Vendor'] !== "Busken Bakery - Madison Rd" &&
-                                                                                             $row['Vendor'] !== "Costco - Mason" &&
-                                                                                             $row['Vendor'] !== "Club Chef" &&
-                                                                                             $row['Vendor'] !== "Edible Arrangements - Glenway Ave" &&
-                                                                                             $row['Vendor'] !== "Edible Arrangements - Hosbrook" &&
-                                                                                             $row['Vendor'] !== "Gigis Cupcakes" &&
-                                                                                             $row['Vendor'] !== "Krogers - Blue Ash" &&
-                                                                                             $row['Vendor'] !== "Krogers - Madeira" &&
-                                                                                             $row['Vendor'] !== "Krogers - Sharonville" &&
-                                                                                             $row['Vendor'] !== "Mason Food Pantry" &&
-                                                                                             $row['Vendor'] !== "Sixteen Bricks") echo $row['Vendor']; ?>"></td>
-                    </tr>
-                    <tr>
-                        <td><p class="note"><?php echo $msg_vendor ?></p></td>
-                        <td></td>
-                        <td><p class="note"><?php echo $msg_vendorOther ?></p></td>
-                    </tr>
-                    <tr>
-                        <td><b>Select Item:</b><span class="note">*</span></td>
-                        <td><select name="Item">
-                            <option value="">Select Item</option>
-                            <option value="Baked Goods"<?php if ($row['Items'] === "Baked Goods") echo ' selected="selected"'; ?>>Baked Goods</option>
-                            <option value="Bread"<?php if ($row['Items'] === "Bread") echo ' selected="selected"'; ?>>Bread</option>
-                            <option value="Canned Goods"<?php if ($row['Items'] === "Canned Goods") echo ' selected="selected"'; ?>>Canned Goods</option>
-                            <option value="Coffee"<?php if ($row['Items'] === "Coffee") echo ' selected="selected"'; ?>>Coffee</option>
-                            <option value="Dairy"<?php if ($row['Items'] === "Dairy") echo ' selected="selected"'; ?>>Dairy</option>
-                            <option value="Fruit"<?php if ($row['Items'] === "Fruit") echo ' selected="selected"'; ?>>Fruit</option>
-                            <option value="Paper Products"<?php if ($row['Items'] === "Paper Products") echo ' selected="selected"'; ?>>Paper Products</option>
-                            <option value="Produce"<?php if ($row['Items'] === "Produce") echo ' selected="selected"'; ?>>Produce</option>
-                            <option value="Meat"<?php if ($row['Items'] === "Meat") echo ' selected="selected"'; ?>>Meat</option>
-                            <option value="Staples"<?php if ($row['Items'] === "Staples") echo ' selected="selected"'; ?>>Staples</option>
-                            <option value="Other"<?php if ($row['Items'] === "Other") echo ' selected="selected"'; ?>>Other</option>
-                        </select></td>
-                        <td><b>Item Description:</b><span class="note">*</span></td>
-                        <td><input type="text" name="ItemDesc" size="20" value="<?php echo $row['ItemDesc']; ?>"></td>
-                    </tr>
-                    <tr>
-                        <td><p class="note"><?php echo $msg_item ?></p></td>
-                        <td></td>
-                        <td><p class="note"><?php echo $msg_itemdesc ?></p></td>
-                    </tr>
-                    <tr>
-                        <td><b>Enter Driver Name:</b><span class="note">*</span></td>
-                        <td><input type="text" name="Driver" size="20" value="<?php echo $row['Driver']; ?>"></td>
-                        <td><b>Enter Quantity:</b><span class="note">*</span></td>
-                        <td><input type="text" name="Quantity" size="20" value="<?php echo $row['Quantity']; ?>"></td>
-                    </tr>
-                    <tr>
-                        <td><p class="note"><?php echo $msg_driver ?></p></td>
-                        <td></td>
-                        <td><p class="note"><?php echo $msg_quantity ?></p></td>
-                    <tr>
-                        <td><b>Enter Dollar Value:</b><span class="note">*</span></td>
-                        <td><input type="text" name="Value" size="20" value="<?php echo $row['Value']; ?>"></td>
-                        <td><b>Enter Weight (lbs):</b><span class="note">*</span></td>
-                        <td><input type="text" name="Weight" size="20" value="<?php echo $row['Weight']; ?>"></td>
-                    </tr>
-                    <tr>
-                        <td><p class="note"><?php echo $msg_value ?></p></td>
-                        <td></td>
-                        <td><p class="note"><?php echo $msg_weight ?></p></td>
-                    </tr>
-                    <tr>
-                        <td><p class="note"><b><?php echo $message ?></b></p></td>
-                        <td colspan="4" align="right"><input type="hidden" name="do" value="update"><input type="submit" value="Update Record"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="4">&nbsp;</td>
-                    </tr>
-                    <tr bgcolor="#6495ED">
-                        <th colspan="4" align="center" border="1"><a href="index.php">Home</a></th>
-                    </tr>
-                </table>
-            </form>
+      <form id="add_form" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+      <table style=" border:1px solid silver" cellpadding="5" cellspacing="0" align="center" border="0">
+          <tr>
+              <td colspan="4" style="background:#6495ED; color:black; fontsize:20px">Add ODB Donation Record</td>
+          </tr>
+          <tr>
+              <td><b>Vendor:</b></td>
+              <td><b>
+              <?php
+              $sql = "SELECT * FROM Vendor Where Id='$vendor'";
+              $result1 = $conn->query($sql);
+              if ( $result1->num_rows > 0 ) 
+              {
+                  while( $row1 = $result1->fetch_assoc() ) 
+                  {
+                      echo $row1['Vendor']." - ".$row1['City'];
+                  }
+              }
+              ?> 
+              </b></td>
+              <td><input type="hidden" name="Vendor" value="<?php echo $vendor; ?>" /></td>
+          </tr>
+          <tr>
+              <td></td>
+          </tr>
+          <tr>
+            <td><b>Select Item:</b><span class="note">*</span></td>
+            <td><select name="Item">
+                 <option value="">Select Item</option>
+            <?php
+             $sql = "SELECT * FROM ItemType ORDER BY Item";
+             $result2 = $conn->query($sql);
+             if ( $result2->num_rows > 0 ) 
+             {
+                 while( $row2 = $result2->fetch_assoc() ) 
+                 {
+                     echo "    <option value=\"".$row2['Item']."\"";
+                     if (isset($_POST['Item']) and ($_POST['Item'] === $row2['Item'])) echo ' selected="selected"';
+                     echo ">".$row2['Item']."</option>\n";
+                 }
+             }
+            ?>
+            </select></td>
+            <td><b>Item Description:</b><span class="note">*</span></td>
+            <td><input type="text" name="ItemDesc" size="20" value="<?php if(isset($_POST['ItemDesc'])) echo $_POST['ItemDesc']; ?>"></td>
+          </tr>
+          <tr>
+            <td><p class="note"><?php if(isset($msg_item)) echo $msg_item ?></p></td>
+            <td></td>
+            <td><p class="note"><?php if(isset($msg_itemdesc)) echo $msg_itemdesc ?></p></td>
+          </tr>
+          <tr>
+            <td><b>Driver Name:</b><span class="note">*</span></td>
+            <td><select name="Driver">
+                <option value="">Select Driver</option>
+            <?php
+              $sql = "SELECT * FROM Driver Where Vendor=\"$vendor\" ORDER BY Driver";
+              $result3 = $conn->query($sql);
+              if ( $result3->num_rows > 0 ) 
+              {
+                  while( $row3 = $result3->fetch_assoc() ) 
+                  {
+                      echo "    <option value=".$row3['Id'];
+                      if (isset($_POST['Driver']) and $_POST['Driver'] === $row3['Id']) echo ' selected="selected"';
+                      echo ">".$row3['Driver']."</option>\n";
+                  }
+              }
+            ?>
+            </select></td>
+            <td><b>Quantity:</b><span class="note">*</span></td>
+            <td><select name="QuantityType">
+                <option value="">Select type</option>
+             <?php
+               $sql = "SELECT * FROM QuantityType ORDER BY Type";
+               $result4 = $conn->query($sql);
+               if ( $result4->num_rows > 0 ) 
+               {
+                   while( $row4 = $result4->fetch_assoc() ) 
+                   {
+                       echo "    <option value=\"".$row4['Type']."\"";
+                       if (isset($_POST['QuantityType']) and ($_POST['QuantityType'] === $row4['Type'])) echo ' selected="selected"';
+                       echo ">".$row4['Type']."</option>\n";
+                   }
+               }
+            ?>
+            </select>
+            <input type="text" name="Quantity" size="8" value="<?php if(isset($_POST['Quantity'])) echo $_POST['Quantity']; ?>"></td>
+          </tr>
+          <tr>
+            <td><p class="note"><?php if (isset($msg_driver)) echo $msg_driver ?></p></td>
+            <td></td>
+            <td><p class="note"><?php if (isset($msg_quantity)) echo $msg_quantity ?></p></td>
+          <tr>
+            <td><b>Dollar Value:</b><span class="note">*</span></td>
+            <td><input type="text" name="Value" size="8" value="<?php if (isset($_POST['Value'])) echo $_POST['Value']; ?>"></td>
+            <td><b>Weight (lbs):</b><span class="note">*</span></td>
+            <td><input type="text" name="Weight" size="8" value="<?php if (isset($_POST['Weight'])) echo $_POST['Weight']; ?>"></td>
+          </tr>
+          <tr>
+            <td><p class="note"><?php if (isset($msg_value)) echo $msg_value ?></p></td>
+            <td></td>
+            <td><p class="note"><?php if (isset($msg_weight)) echo $msg_weight ?></p></td>
+          </tr>
+          <tr>
+            <td><p class="note"><b><?php if (isset($message)) echo $message ?></b></p></td>
+            <td></td>
+            <td colspan="4" align="right"><input type="hidden" name="do" value="store"><input type="submit" value="Add Record"></td>
+          </tr>
+          <tr>
+            <td colspan="4">&nbsp;</td>
+          </tr>
+          <tr bgcolor="#6495ED">
+            <th colspan="4" align="center" border="1"><a href="index.php">Home</a></th>
+          </tr>
+      </table>
+  </form>
       <?php
         }
       }
