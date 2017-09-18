@@ -13,14 +13,14 @@
             if ( $varType == 'ALL' )
             {
                 $sql1 = "SELECT * FROM Donation";
-                $sql2 = "SELECT SUM(Weight) as sum_weight FROM Donation";
-                $sql3 = "SELECT SUM(Value) as sum_value FROM Donation";
+                $sql2 = "SELECT (Quantity * Weight) as sum_weight FROM Donation";
+                $sql3 = "SELECT (Quantity * Value) as sum_value FROM Donation";
             }
             else
             {
                 $sql1 = "SELECT * FROM Donation WHERE Items = '$varType'";
-                $sql2 = "SELECT SUM(Weight) as sum_weight FROM Donation WHERE Items = '$varType'";
-                $sql3 = "SELECT SUM(Value) as sum_value FROM Donation WHERE Items = '$varType'";
+                $sql2 = "SELECT (Quantity * Weight) as sum_weight FROM Donation WHERE Items = '$varType'";
+                $sql3 = "SELECT (Quantity * Value) as sum_value FROM Donation WHERE Items = '$varType'";
             }
         }
         elseif (!empty($_GET['itemType']))
@@ -29,22 +29,22 @@
             if ( $varType == 'ALL' )
             {
                 $sql1 = "SELECT * FROM Donation";
-                $sql2 = "SELECT SUM(Weight) as sum_weight FROM Donation";
-                $sql3 = "SELECT SUM(Value) as sum_value FROM Donation";
+                $sql2 = "SELECT SUM(Quantity * Weight) as sum_weight FROM Donation";
+                $sql3 = "SELECT SUM(Quantity * Value) as sum_value FROM Donation";
             }
             else
             {
                 $sql1 = "SELECT * FROM Donation WHERE Items = '$varType'";
-                $sql2 = "SELECT SUM(Weight) as sum_weight FROM Donation WHERE Items = '$varType'";
-                $sql3 = "SELECT SUM(Value) as sum_value FROM Donation WHERE Items = '$varType'";
+                $sql2 = "SELECT SUM(Quantity * Weight) as sum_weight FROM Donation WHERE Items = '$varType'";
+                $sql3 = "SELECT SUM(Quantity * Value) as sum_value FROM Donation WHERE Items = '$varType'";
             }
         }
         else
         {
             $varType = 'ALL';
             $sql1 = "SELECT * FROM Donation";
-            $sql2 = "SELECT SUM(Weight) as sum_weight FROM Donation";
-            $sql3 = "SELECT SUM(Value) as sum_value FROM Donation";
+            $sql2 = "SELECT SUM(Quantity * Weight) as sum_weight FROM Donation";
+            $sql3 = "SELECT SUM(QUantity * Value) as sum_value FROM Donation";
         }
         $result = $conn->query($sql1);
         $numItems = mysqli_num_rows($result);
@@ -59,18 +59,21 @@
     <table border="2" cellpadding="12" cellspacing="0px" align="center">
     <p style="font-size:10px">
     <TR>
-    <TD><select name="itemType">
+    <td><select name="itemType">
         <option value="ALL" <?php echo ($varType == 'ALL' ? 'selected="selected"' : '') ?>>All Items</option>
-        <option value="Baked Goods" <?php echo ($varType == 'Baked Goods' ? 'selected="selected"' : '') ?>>Baked Goods</option>
-        <option value="Bread" <?php echo ($varType == 'Bread' ? 'selected="selected"' : '') ?>>Bread</option>
-        <option value="Canned Goods" <?php echo ($varType == 'Canned Goods' ? 'selected="selected"' : '') ?>>Canned Goods</option>
-        <option value="Coffee" <?php echo ($varType == 'Coffee' ? 'selected="selected"' : '') ?>>Coffee</option>
-        <option value="Dairy" <?php echo ($varType == 'Dairy' ? 'selected="selected"' : '') ?>>Dairy</option>
-        <option value="Fruit" <?php echo ($varType == 'Fruit' ? 'selected="selected"' : '') ?>>Fruit</option>
-        <option value="Paper Products" <?php echo ($varType == 'Paper Products' ? 'selected="selected"' : '') ?>>Paper Products</option>
-        <option value="Meat" <?php echo ($varType == 'Meat' ? 'selected="selected"' : '') ?>>Meat</option>
-        <option value="Staples" <?php echo ($varType == 'Staples' ? 'selected="selected"' : '') ?>>Staples</option>
-        <option value="Other" <?php echo ($varType == 'Other' ? 'selected="selected"' : '') ?>>Other</option>
+        <?php
+          $sql = "SELECT * FROM ItemType ORDER BY Item";
+          $result = $conn->query($sql);
+          if ( $result->num_rows > 0 ) 
+          {
+              while( $row = $result->fetch_assoc() ) 
+              {
+                  echo "    <option value=\"".$row['Item']."\"";
+                  if (isset($varType) and ($varType === $row['Item'])) echo ' selected="selected"';
+                  echo ">".$row['Item']."</option>\n";
+              }
+          }
+        ?>
     </select>
         <input type="submit" name="Submit" value="Select" /></TD>
         <TD colspan="3" align="center"><b>Number of Items: <?php echo $numItems; ?></b></TD>
@@ -172,11 +175,11 @@
         while( $row = $result->fetch_assoc() ) 
         {
             echo "  <TR>\n";
-            echo "   <TD align=center><a href='viewrecord.php?id=".$row['RecordId']."'>View # " .$row['RecordId']. "</a></TD>\n";
+            echo "   <TD align=center><a href='edit.php?id=".$row['RecordId']."'>View # " .$row['RecordId']. "</a></TD>\n";
             echo "   <TD>".$row['Name']."</TD>\n";
-            echo "   <TD><a href='viewvendor.php?id=".$row['VendorId']."'>" .$row['Vendor']. "</a></TD>\n";
+            echo "   <TD><a href='editvendor.php?id=".$row['VendorId']."'>" .$row['Vendor']. "</a></TD>\n";
             echo "   <TD bgcolor=#00FF00><a href='mailto:".$row['Email']."'>".$row['Email']."</TD>\n";
-            echo "   <TD><a href='viewdriver.php?id=".$row['DriverId']."'>" .$row['Driver']. "</a></TD>\n";
+            echo "   <TD><a href='editdriver.php?id=".$row['DriverId']."'>" .$row['Driver']. "</a></TD>\n";
             echo "   <TD>".$row['Items']."</TD>\n";
             echo "   <TD>".$row['ItemDesc']."</TD>\n";
             echo "   <TD>".$row['Quantity']."</TD>\n";

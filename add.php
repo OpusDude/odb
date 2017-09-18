@@ -86,14 +86,14 @@
         {
             $msg_value = "You must enter a value";
         }
-        elseif(ctype_digit($_POST["Value"])) 
+        elseif(is_numeric($_POST["Value"])) 
         {
             $msg_value = NULL;
-            $Value = number_format($_POST["Value"]);
+            $Value = number_format($_POST["Value"], 2, '.', '');
         }
         else
         {
-            $msg_value = "Whole numbers only";
+            $msg_value = "Decimal numbers only";
         }
         if(empty($_POST["Weight"]))
         {

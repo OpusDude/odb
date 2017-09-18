@@ -8,13 +8,14 @@
     <center><h1><u>ODB Donation Database</u></h1></center>
     <table style=" border:1px solid silver" cellpadding="5px" cellspacing="0px" align="center" border="1">
       <tr bgcolor="#6495ED" style="color:#FFFFFF">
-        <td align="center"><b><font color="black">Name</font></b></td>
         <td align="center"><b><font color="black">Vendor</font></b></td>
+        <td align="center"><b><font color="black">Name</font></b></td>
         <td align="center"><b><font color="black">Email</font></b></td>
         <td align="center"><b><font color="black">Driver</font></b></td>
         <td align="center"><b><font color="black">Item</font></b></td>
         <td align="center"><b><font color="black">Item Description</font></b></td>
         <td align="center"><b><font color="black">Quantity</font></b></td>
+        <td align="center"><b><font color="black">Quantity Type</font></b></td>
         <td align="center"><b><font color="black">$ Value</font></b></td>
         <td align="center"><b><font color="black">Weight (lbs)</font></b></td>
         <td align="center"><b><font color="black">Date</font></b></td>
@@ -61,7 +62,7 @@
      OR Items               Like '%$search%'
      OR ItemDesc            LIKE '%$search%'";
 
-     $sqlw = "SELECT SUM(Weight) as sum_weight FROM Donation
+     $sqlw = "SELECT SUM(Quantity * Weight) as sum_weight FROM Donation
               INNER JOIN Vendor on Donation.Vendor = Vendor.Id 
               INNER JOIN Driver on Donation.Driver = Driver.Id 
               WHERE Vendor.Contact LIKE '%$search%' 
@@ -71,7 +72,7 @@
                  OR Items          LIke '%$search%'
                  OR ItemDesc       LIKE '%$search%'";
 
-     $sqlv = "SELECT SUM(Value) as sum_value FROM Donation
+     $sqlv = "SELECT SUM(Quantity * Value) as sum_value FROM Donation
               INNER JOIN Vendor on Donation.Vendor = Vendor.Id 
               INNER JOIN Driver on Donation.Driver = Driver.Id 
               WHERE Vendor.Contact LIKE '%$search%' 
@@ -87,20 +88,14 @@
         while( $row = $result->fetch_assoc() ) 
         { 
           echo "  <tr>\n";
-          echo "   <td><a href='view.php?id=".$row['Id']."'>" .$row['Name']. "</a></td>\n";
           echo "   <td>".$row['Vendor']."</td>\n";
-          if ($row['Email'] == 'Unknown')
-          {
-              echo "   <td bgcolor=#FF0000>".$row['Email']."</td>\n";
-          }
-          else
-          {
-              echo "   <td bgcolor=#00FF00><a href='mailto:".$row['Email']."'>".$row['Email']."</td>\n";
-          }
+          echo "   <td>".$row['Name']."</td>\n";
+          echo "   <td bgcolor=#00FF00><a href='mailto:".$row['Email']."'>".$row['Email']."</td>\n";
           echo "   <td>".$row['Driver']."</td>\n";
           echo "   <td>".$row['Items']."</td>\n";
           echo "   <td>".$row['ItemDesc']."</td>\n";
           echo "   <td>".$row['Quantity']."</td>\n";
+          echo "   <td>".$row['QuantityType']."</td>\n";
           echo "   <td>".$row['Value']."</td>\n";
           echo "   <td>".$row['Weight']."</td>\n";
           echo "   <td>".$row['Date']."</td>\n";
@@ -116,7 +111,7 @@
      else
      {
        echo "<tr>\n";
-       echo "  <td colspan='11' align='center' style='color:red'>Record not found</td>\n";
+       echo "  <td colspan='12' align='center' style='color:red'>Record not found</td>\n";
        echo "</tr>\n";
      }
  }
@@ -130,12 +125,12 @@ catch(Exception $e)
 }
 ?>
       <tr>
-        <td colspan="3" align="center"><b>Number of Items: <?php if(isset($numItems)) echo $numItems; ?></b></td>
+        <td colspan="4" align="center"><b>Number of Items: <?php if(isset($numItems)) echo $numItems; ?></b></td>
         <td colspan="4" align="center"><b>Total Weight (lbs): <?php if(isset($totalWeight)) echo $totalWeight['sum_weight']; ?></b></td>
         <td colspan="4" align="center"><b>Total Value: $<?php if(isset($totalValue)) echo round($totalValue['sum_value'],2); ?></b></td>
       </tr>
       <tr bgcolor="#6495ED">
-        <th colspan="11" align="center"><a href="index.php">Home</a></th>
+        <th colspan="12" align="center"><a href="index.php">Home</a></th>
       </tr>
     </table>
   </body>
