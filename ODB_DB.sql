@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Sep 20, 2017 at 10:53 AM
+-- Generation Time: Oct 02, 2017 at 07:25 PM
 -- Server version: 5.7.19-0ubuntu0.16.04.1
 -- PHP Version: 7.0.22-0ubuntu0.16.04.1
 
@@ -29,13 +29,14 @@ SET time_zone = "+00:00";
 CREATE TABLE `Donation` (
   `Id` int(11) NOT NULL,
   `Vendor` int(11) NOT NULL,
-  `Driver` int(11) DEFAULT NULL,
+  `Driver` varchar(50) NOT NULL,
   `Items` varchar(50) NOT NULL,
   `ItemDesc` varchar(50) NOT NULL,
-  `Quantity` int(11) DEFAULT NULL,
+  `Quantity` int(11) NOT NULL,
   `QuantityType` varchar(50) NOT NULL,
-  `Value` decimal(10,2) DEFAULT NULL,
-  `Weight` double DEFAULT NULL,
+  `Value` decimal(10,2) NOT NULL,
+  `Weight` double NOT NULL,
+  `Notes` varchar(250) DEFAULT NULL,
   `Date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `Initialize` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -44,12 +45,14 @@ CREATE TABLE `Donation` (
 -- Dumping data for table `Donation`
 --
 
-INSERT INTO `Donation` (`Id`, `Vendor`, `Driver`, `Items`, `ItemDesc`, `Quantity`, `QuantityType`, `Value`, `Weight`, `Date`, `Initialize`) VALUES
-(3, 4, 2, 'Produce', 'Potatos', 34, 'Bags', '12.00', 4, '2017-09-15 16:21:54', '2017-09-15 15:06:59'),
-(4, 1, 1, 'Fruit', 'Apples', 15, 'Crates', '25.00', 13, '2017-09-15 16:17:31', '2017-09-15 15:06:59'),
-(6, 5, 4, 'Meat', 'Ground Beef', 10, 'Boxes', '45.00', 50, '2017-09-15 16:54:41', '2017-09-15 15:06:59'),
-(7, 6, 8, 'Computer', 'Laptop', 1, 'Boxes', '799.95', 7, '2017-09-18 16:40:44', '2017-09-18 16:29:37'),
-(8, 2, 5, 'Baked Goods', 'Cookies', 200, 'Boxes', '7.50', 2, '2017-09-18 17:14:43', '2017-09-18 17:14:43');
+INSERT INTO `Donation` (`Id`, `Vendor`, `Driver`, `Items`, `ItemDesc`, `Quantity`, `QuantityType`, `Value`, `Weight`, `Notes`, `Date`, `Initialize`) VALUES
+(3, 4, 'Jordy Ram', 'Produce', 'Potatos', 34, 'Bags', '12.00', 4, NULL, '2017-10-01 10:59:16', '2017-09-15 15:06:59'),
+(4, 1, 'Tony Rush', 'Fruit', 'Apples', 15, 'Crates', '25.00', 13, NULL, '2017-10-01 10:59:04', '2017-09-15 15:06:59'),
+(6, 5, 'Maggie Turner', 'Meat', 'Ground Beef', 10, 'Boxes', '45.00', 50, NULL, '2017-10-01 10:58:46', '2017-09-15 15:06:59'),
+(7, 6, 'Jordy Ram', 'Computer', 'Laptop', 1, 'Boxes', '799.95', 7, NULL, '2017-10-01 10:59:38', '2017-09-18 16:29:37'),
+(8, 2, 'Jerry Fields', 'Baked Goods', 'Cookies', 200, 'Boxes', '7.50', 2, 'This is a super long comment. If Tina made 5 dozen cookies and gave 3 dozen to Alice and 1 dozen to Lisa, how many does she have left to give to ODB?', '2017-10-02 17:20:47', '2017-09-18 17:14:43'),
+(9, 1, 'Tom Jones', 'Canned Goods', 'Green Beans', 50, 'Bags', '4.99', 1, 'We have to many green beans. Do not except anymore.', '2017-10-02 15:12:44', '2017-10-02 13:35:09'),
+(14, 4, 'Tony Rush', 'Produce', 'Sweet Potatos', 20, 'Boxes', '60.00', 8, 'Sweet Potatos are awesome!', '2017-10-02 14:07:41', '2017-10-02 14:07:41');
 
 -- --------------------------------------------------------
 
@@ -61,7 +64,6 @@ CREATE TABLE `Driver` (
   `Id` int(11) NOT NULL,
   `Driver` varchar(75) NOT NULL,
   `Email` varchar(75) NOT NULL,
-  `Vendor` int(11) NOT NULL,
   `PhoneNumber` varchar(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -69,13 +71,14 @@ CREATE TABLE `Driver` (
 -- Dumping data for table `Driver`
 --
 
-INSERT INTO `Driver` (`Id`, `Driver`, `Email`, `Vendor`, `PhoneNumber`) VALUES
-(1, 'Tom Jones', 'tom@myemail.com', 1, '513-123-4567'),
-(2, 'Jason King', 'jking@fuse.net', 4, '513-901-8874'),
-(3, 'David Gaines', 'davidg@whatever.com', 1, '513-123-4555'),
-(4, 'Maggie Turner', 'maggie@avrilsmeats.com', 5, '513-901-8989'),
-(5, 'Tony Rush', 'rush@tinascookies.com', 2, '419-938-6154'),
-(8, 'Jordy Ram', 'jram@harddriver.com', 6, '513-888-6767');
+INSERT INTO `Driver` (`Id`, `Driver`, `Email`, `PhoneNumber`) VALUES
+(1, 'Tom Jones', 'tom@myemail.com', '513-123-4567'),
+(3, 'David Gaines', 'davidg@whatever.com', '513-123-4555'),
+(4, 'Maggie Turner', 'maggie@avrilsmeats.com', '513-901-8989'),
+(5, 'Tony Rush', 'rush@tinascookies.com', '419-938-6154'),
+(8, 'Jordy Ram', 'jram@harddriver.com', '513-888-6767'),
+(9, 'Jason King', 'jking@fuse.net', '513-222-2222'),
+(10, 'Jerry Fields', 'Feilds@grass.com', '513-999-8765');
 
 -- --------------------------------------------------------
 
@@ -203,12 +206,12 @@ ALTER TABLE `Vendor`
 -- AUTO_INCREMENT for table `Donation`
 --
 ALTER TABLE `Donation`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT for table `Driver`
 --
 ALTER TABLE `Driver`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `ItemType`
 --
