@@ -12,15 +12,15 @@
     <body>
 <?php
     require 'creds.php';
-    $rec_id  = $_GET["id"];
-    $secret  = "AYS";
-    $message = NULL;
+    $rec_name = $_GET["name"];
+    $secret   = "AYS";
+    $message  = NULL;
 
     if(isset($_POST['do']) and $_POST["do"]=="delete")
     { 
         if($_POST['password'] === $secret)
         {
-            $sql = "DELETE FROM Driver WHERE Id = '$rec_id'";
+            $sql = "DELETE FROM Driver WHERE Driver = '$rec_name'";
     
             if ($conn->query($sql) === TRUE)
             {
@@ -45,7 +45,7 @@
               <td colspan="2" style="background:#6495ED; color:#FFFFFF; font-size:20px" align="center">Delete Driver</td>
             </tr>
             <?php
-            $sql    = "SELECT * FROM Driver WHERE Id = '$rec_id'";
+            $sql    = "SELECT Driver FROM Driver WHERE Driver = '$rec_name'";
             $result = $conn->query($sql);
             if ( $result->num_rows > 0 ) 
             {
@@ -56,6 +56,12 @@
                   echo "             <td colspan=\"1\" align=\"center\"><input type=\"hidden\" name=\"Driver\" value=\"".$row['Driver']."\">".$row['Driver']."</td>\n";
                   echo "            </tr>\n";
                 }
+            }
+            else
+            {
+                $message = "Driver '" .$_POST['Driver']. "' not found in Database";
+                echo "<tr>\n";
+                echo "            </tr>\n";
             }
             ?>
           </table>

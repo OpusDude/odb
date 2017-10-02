@@ -30,55 +30,52 @@
  if (isset($_POST['datef']) and isset($_POST['datet']))
  {
     $holdFrom   = explode("/", $_POST["datef"]);
-    $fromDate   = $holdFrom[2]. "-" .$holdFrom[1]. "-" .$holdFrom[0];
+    $fromDate   = $holdFrom[2]. "-" .$holdFrom[0]. "-" .$holdFrom[1];
     $holdTo     = explode("/", $_POST["datet"]);
-    $toDate     = $holdTo[2]. "-" .$holdTo[1]. "-" .$holdTo[0];
+    $toDate     = $holdTo[2]. "-" .$holdTo[0]. "-" .$holdTo[1];
  }
 
  try
  {
    if (empty($search))
    {
-     $sql = "SELECT Donation.Id As Id, Donation.Vendor AS VendorId, Vendor.Contact AS Name, Vendor.Email AS Email,
-     Vendor.Vendor AS Vendor, Donation.Driver AS DriverId, Driver.Driver AS Driver, Donation.Items, 
+     $sql = "SELECT Donation.Id As Id, Donation.Vendor AS VendorId, Vendor.Contact AS Name,
+     Vendor.Email AS Email, Vendor.Vendor AS Vendor, Donation.Driver AS Driver, Donation.Items,
      Donation.ItemDesc, Donation.QuantityType, Donation.Quantity, Donation.Value, Donation.Weight, Donation.Date 
      FROM `Donation` INNER JOIN Vendor on Donation.Vendor = Vendor.Id 
-     INNER JOIN Driver on Donation.Driver = Driver.Id WHERE Date > '$fromDate' AND Date < '$toDate'";
+     WHERE Date > '$fromDate' AND Date < '$toDate'";
 
      $sqlw = "SELECT SUM(Weight) as sum_weight FROM Donation WHERE Date > '$fromDate' AND Date < '$toDate'";
      $sqlv = "SELECT SUM(Value) as sum_value FROM Donation WHERE Date > '$fromDate' AND Date < '$toDate'";
    }
    else
    {
-     $sql = "SELECT Donation.Id As Id, Donation.Vendor AS VendorId, Vendor.Contact AS Name, Vendor.Email AS Email,
-     Vendor.Vendor AS Vendor, Donation.Driver AS DriverId, Driver.Driver AS Driver, Donation.Items, 
+     $sql = "SELECT Donation.Id As Id, Donation.Vendor AS VendorId, Vendor.Contact AS Name,
+     Vendor.Email AS Email, Vendor.Vendor AS Vendor, Donation.Driver AS Driver, Donation.Items,
      Donation.ItemDesc, Donation.QuantityType, Donation.Quantity, Donation.Value, Donation.Weight, Donation.Date 
      FROM `Donation` INNER JOIN Vendor on Donation.Vendor = Vendor.Id 
-     INNER JOIN Driver on Donation.Driver = Driver.Id 
      WHERE Vendor.Contact   LIKE '%$search%' 
      OR Vendor.Vendor       LIKE '%$search%'
      OR Vendor.Email        LiKE '%$search%'
-     OR Driver.Driver       LIKE '%$search%'
+     OR Driver              LIKE '%$search%'
      OR Items               Like '%$search%'
      OR ItemDesc            LIKE '%$search%'";
 
      $sqlw = "SELECT SUM(Quantity * Weight) as sum_weight FROM Donation
               INNER JOIN Vendor on Donation.Vendor = Vendor.Id 
-              INNER JOIN Driver on Donation.Driver = Driver.Id 
               WHERE Vendor.Contact LIKE '%$search%' 
                  OR Vendor.Vendor  LIKE '%$search%'
                  OR Vendor.Email   LIKE '%$search%'
-                 OR Driver.Driver  LIKE '%$search%'
+                 OR Driver         LIKE '%$search%'
                  OR Items          LIke '%$search%'
                  OR ItemDesc       LIKE '%$search%'";
 
      $sqlv = "SELECT SUM(Quantity * Value) as sum_value FROM Donation
               INNER JOIN Vendor on Donation.Vendor = Vendor.Id 
-              INNER JOIN Driver on Donation.Driver = Driver.Id 
               WHERE Vendor.Contact LIKE '%$search%' 
               OR Vendor.Vendor     LIKE '%$search%'
               OR Vendor.Email      LIKE '%$search%'
-              OR Driver.Driver     LIKE '%$search%'
+              OR Driver            LIKE '%$search%'
               OR Items             LIKE '%$search%'
               OR ItemDesc          LIKE '%$search%'";
    }

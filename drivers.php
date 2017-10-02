@@ -31,15 +31,7 @@
         {
             $Email = $_POST["Email"];
         }
-        if(empty($_POST["Vendor"]))
-        {
-            $msg_vendor = "You must select a vendor";
-        }
-        else 
-        {
-            $Vendor = $_POST["Vendor"];
-        }
-        if(empty($_POST["PhoneNumber"]))
+       if(empty($_POST["PhoneNumber"]))
         {
             $msg_phonenumber = "You must enter a phone number";
         }
@@ -48,7 +40,7 @@
             $PhoneNumber = $_POST["PhoneNumber"];
         }
         
-        if ($msg_vendor == "" && $msg_email == "" && $msg_vendor == "" && $msg_phonenumber == "")
+        if ($msg_driver == "" && $msg_email == "" && $msg_phonenumber == "")
         {
             try
             {
@@ -60,8 +52,8 @@
                 }
                 else
                 {
-                    $sql = "INSERT INTO Driver (Driver, Email, Vendor, PhoneNumber)
-                    VALUES ('$Driver', '$Email', '$Vendor', '$PhoneNumber')";
+                    $sql = "INSERT INTO Driver (Driver, Email, PhoneNumber)
+                    VALUES ('$Driver', '$Email', '$PhoneNumber')";
 
                     if ($conn->query($sql) === TRUE)
                     {
@@ -100,10 +92,8 @@
                     <?php
                     try
                     {
-                        $sql    = "SELECT Driver.Driver, Driver.Email, Driver.PhoneNumber,
-                                   Vendor.Vendor AS Vendor, Vendor.City AS City, Driver.Id
-                                   FROM Driver INNER JOIN Vendor ON Driver.Vendor = Vendor.Id
-                                   ORDER BY Driver";
+                        $sql    = "SELECT Driver, Email, PhoneNumber, Id
+                                   FROM Driver ORDER BY Driver";
 
                         $result = $conn->query($sql);
                         if ( $result->num_rows > 0 ) 
@@ -114,9 +104,8 @@
                                 echo "              <td align=\"center\">".$row['Driver']."</td>\n";
                                 echo "              <td align=\"center\"><a href='mailto:".$row['Email']."'>".$row['Email']."</td>\n";
                                 echo "              <td align=\"center\">".$row['PhoneNumber']."</td>\n";
-                                echo "              <td align=\"center\">".$row['Vendor']." - ".$row['City']."</td>\n";
-                                echo "              <td align=\"center\"><a href=\"editdriver.php?id=".$row['Id']."\"><b>Edit</b></a></td>\n";
-                                echo "              <td align=\"center\"><a href=\"deletedriver.php?id=".$row['Id']."\"><b>Delete</b></a></td>\n";
+                                echo "              <td align=\"center\"><a href=\"editdriver.php?name=".$row['Driver']."\"><b>Edit</b></a></td>\n";
+                                echo "              <td align=\"center\"><a href=\"deletedriver.php?name=".$row['Driver']."\"><b>Delete</b></a></td>\n";
                                 echo "            </tr>\n";
                             }
                         }
@@ -150,28 +139,9 @@
                         <td colspan="2"><p class="note"><?php if(isset($msg_email)) echo $msg_email ?></p></td>
                     </tr>
                     <tr>
-                        <td><b>Select Vendor:</b><span class="note">*</span></td>
-                        <td><select name="Vendor">
-                            <option value="">Select Vendor</option>
-                        <?php
-                        $sql = "SELECT * FROM Vendor ORDER BY Vendor";
-                        $result = $conn->query($sql);
-                        if ( $result->num_rows > 0 ) 
-                        {
-                            while( $row = $result->fetch_assoc() ) 
-                            {
-                                echo "   <option value=".$row['Id'];
-                                if (isset($_POST['Vendor']) and $_POST['Vendor'] === $row['Id']) echo ' selected="selected"';
-                                echo ">".$row['Vendor']." - ".$row['City']."</option>\n";
-                            }
-                        }
-                        ?>
-                        </select></td>
                         <td><b>Phone Number:</b><span class="note">*</span></td>
                         <td><input type="text" name="PhoneNumber" size="20" value="<?php if(isset($_POST['PhoneNumber'])) echo $_POST['PhoneNumber']; ?>"></td>
                     <tr>
-                        <td colspan="2"><p class="note"><?php if(isset($msg_vendor)) echo $msg_vendor ?></p></td>
-                        <td></td>
                         <td colspan="2"><p class="note"><?php if(isset($msg_phonenumber)) echo $msg_phonenumber ?></p></td>
                     </tr>
                     <tr>

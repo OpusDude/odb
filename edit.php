@@ -141,11 +141,12 @@
           <center><h1><u>ODB Donation Database</u></h1></center>
           <center><h3><span class="note">*</span> denotes mandatory</h3></center>
       <?php
-      $sql = "SELECT Donation.Id As Id, Donation.Vendor AS VendorId, Vendor.Contact AS Name, Vendor.Email AS Email,
-      Vendor.Vendor AS Vendor, Donation.Driver AS DriverId, Driver.Driver AS Driver, Donation.Items, 
-      Donation.ItemDesc, Donation.QuantityType, Donation.Quantity, Donation.Value, Donation.Weight, Donation.Date 
-      FROM `Donation` INNER JOIN Vendor on Donation.Vendor = Vendor.Id 
-      INNER JOIN Driver on Donation.Driver = Driver.Id WHERE Donation.Id = '".$rec_id."'";
+      $sql = "SELECT Donation.Id As Id, Donation.Vendor AS VendorId, Vendor.Contact AS Name,
+              Vendor.Email AS Email, Vendor.Vendor AS Vendor, Donation.Driver AS Driver,
+              Donation.Items, Donation.ItemDesc, Donation.QuantityType, Donation.Quantity,
+              Donation.Value, Donation.Weight, Donation.Date 
+              FROM `Donation` INNER JOIN Vendor on Donation.Vendor = Vendor.Id 
+              WHERE Donation.Id = '".$rec_id."'";
       
       $result = $conn->query($sql);
       if ( $result->num_rows > 0 ) 
@@ -180,7 +181,7 @@
             <td><select name="Item">
                  <option value="">Select Item</option>
             <?php
-             $sql = "SELECT * FROM ItemType ORDER BY Item";
+             $sql = "SELECT Item FROM ItemType ORDER BY Item";
              $result2 = $conn->query($sql);
              if ( $result2->num_rows > 0 ) 
              {
@@ -207,13 +208,13 @@
             <td><select name="Driver">
                 <option value="">Select Driver</option>
             <?php
-              $sql = "SELECT * FROM Driver Where Vendor=\"$row[VendorId]\" ORDER BY Driver";
+              $sql = "SELECT Driver FROM Driver ORDER BY Driver";
               $result3 = $conn->query($sql);
               if ( $result3->num_rows > 0 ) 
               {
                   while( $row3 = $result3->fetch_assoc() ) 
                   {
-                      echo "    <option value=".$row3['Id'];
+                      echo "    <option value=\"".$row3['Driver']."\"";
                       if (isset($row['Driver']) and $row3['Driver'] === $row['Driver']) echo ' selected="selected"';
                       echo ">".$row3['Driver']."</option>\n";
                   }
@@ -224,7 +225,7 @@
             <td><select name="QuantityType">
                 <option value="">Select type</option>
              <?php
-               $sql = "SELECT * FROM QuantityType ORDER BY Type";
+               $sql = "SELECT Type FROM QuantityType ORDER BY Type";
                $result4 = $conn->query($sql);
                if ( $result4->num_rows > 0 ) 
                {

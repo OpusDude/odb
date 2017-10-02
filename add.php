@@ -175,7 +175,7 @@
                       <td><select name="Item">
                            <option value="">Select Item</option>
                       <?php
-                       $sql = "SELECT * FROM ItemType ORDER BY Item";
+                       $sql = "SELECT Item FROM ItemType ORDER BY Item";
                        $result = $conn->query($sql);
                        if ( $result->num_rows > 0 ) 
                        {
@@ -201,14 +201,14 @@
                       <td><select name="Driver">
                           <option value="">Select Driver</option>
                       <?php
-                        $sql = "SELECT * FROM Driver Where Vendor=\"$vendor\" ORDER BY Driver";
+                        $sql = "SELECT Driver FROM Driver ORDER BY Driver";
                         $result = $conn->query($sql);
                         if ( $result->num_rows > 0 ) 
                         {
                             while( $row = $result->fetch_assoc() ) 
                             {
-                                echo "    <option value=".$row['Id'];
-                                if (isset($_POST['Driver']) and $_POST['Driver'] === $row['Id']) echo ' selected="selected"';
+                                echo "    <option value=".$row['Driver'];
+                                if (isset($_POST['Driver']) and $_POST['Driver'] === $row['Driver']) echo ' selected="selected"';
                                 echo ">".$row['Driver']."</option>\n";
                             }
                         }
@@ -218,7 +218,7 @@
                       <td><select name="QuantityType">
                           <option value="">Select type</option>
                        <?php
-                         $sql = "SELECT * FROM QuantityType ORDER BY Type";
+                         $sql = "SELECT Type FROM QuantityType ORDER BY Type";
                          $result = $conn->query($sql);
                          if ( $result->num_rows > 0 ) 
                          {

@@ -3,7 +3,8 @@
     <meta name="description" content="Php Code for View, Search, Add, Edit and Delete Record" /> 
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /> 
     <title>Search ODB Donation Records</title> 
-    <script type="text/javascript" src="http://services.iperfect.net/js/IP_generalLib.js"></script>
+    <link rel="stylesheet" type="text/css" href="tcal.css" />
+    <script type="text/javascript" src="tcal.js"></script>
      <script type='text/javascript'>
      function validate() 
      {
@@ -37,11 +38,11 @@
        </tr> 
        <tr>
         <td><label for="fromDate">From Date:</label></td>
-        <td align="center"><input type="text" name="datef" id="datef" alt="date" class="IP_calendar" title="d/m/Y"></td>
+        <td align="center"><input type="text" name="datef" id="datef" alt="date" class="tcal" title="month/day/year"></td>
        </tr>
        <tr>
         <td><label for="toDate">To Date:</label></td>
-        <td align="center"><input type="text" name="datet" id="datet" alt="date" class="IP_calendar" title="d/m/Y"></td>
+        <td align="center"><input type="text" name="datet" id="datet" alt="date" class="tcal" title="month/day/year"></td>
         <td colspan="1" align="right"><input type="submit" value="Search" /></td>
        </tr>
       </table>

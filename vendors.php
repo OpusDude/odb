@@ -149,7 +149,6 @@
                                 echo "              <td align=\"center\">".$row['ZipCode']."</td>\n";
                                 echo "              <td align=\"center\">".$row['PhoneNumber']."</td>\n";
                                 echo "              <td align=\"center\"><a href=\"editvendor.php?id=".$row['Id']."\"><b>Edit</b></a></td>\n";
-                                echo "              <td align=\"center\"><a href=\"deletevendor.php?id=".$row['Id']."\"><b>Delete</b></a></td>\n";
                                 echo "            </tr>\n";
                             }
                         }
@@ -198,8 +197,10 @@
                             <option value="">Select City</option>
                             <option value="Cincinnati"<?php if (isset($_POST['City']) and $_POST['City'] === "Cincinnati") echo ' selected="selected"'; ?>>Cincinnati</option>
                             <option value="Blue Ash"<?php if (isset($_POST['City']) and $_POST['City'] === "Blue Ash") echo ' selected="selected"'; ?>>Blue Ash</option>
+                            <option value="Covington"<?php if (isset($_POST['City']) and $_POST['City'] === "Covington") echo ' selected="selected"'; ?>>Covington</option>
                             <option value="Madeira"<?php if (isset($_POST['City']) and $_POST['City'] === "Madeira") echo ' selected="selected"'; ?>>Madeira</option>
                             <option value="Mason"<?php if (isset($_POST['City']) and $_POST['City'] === "Mason") echo ' selected="selected"'; ?>>Mason</option>
+                            <option value="Newport"<?php if (isset($_POST['City']) and $_POST['City'] === "Newport") echo ' selected="selected"'; ?>>Newport</option>
                             <option value="Norwood"<?php if (isset($_POST['City']) and $_POST['City'] === "Norwood") echo ' selected="selected"'; ?>>Norwood</option>
                             <option value="Sharonville"<?php if (isset($_POST['City']) and $_POST['City'] === "Sharonville") echo ' selected="selected"'; ?>>Sharonville</option>
                             <option value="Other"<?php if (isset($_POST['City']) and $_POST['City'] === "Other") echo ' selected="selected"'; ?>>Other</option>

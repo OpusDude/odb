@@ -98,19 +98,17 @@
     <?php
     if (empty($varType) || $varType == 'ALL')
     {
-    $sql = "SELECT Donation.Id As RecordId, Donation.Vendor AS VendorId, Vendor.Contact AS Name, Vendor.Email AS Email,
-            Vendor.Vendor AS Vendor, Donation.Driver AS DriverId, Driver.Driver AS Driver, Donation.Items, 
+    $sql = "SELECT Donation.Id As RecordId, Donation.Vendor AS VendorId, Vendor.Contact AS Name,
+            Vendor.Email AS Email, Vendor.Vendor AS Vendor, Donation.Driver AS Driver, Donation.Items,
             Donation.ItemDesc, Donation.QuantityType, Donation.Quantity, Donation.Value, Donation.Weight, Donation.Date 
-            FROM `Donation` INNER JOIN Vendor on Donation.Vendor = Vendor.Id 
-            INNER JOIN Driver on Donation.Driver = Driver.Id";
+            FROM `Donation` INNER JOIN Vendor on Donation.Vendor = Vendor.Id";
     }
     else
     {
-    $sql = "SELECT Donation.Id As RecordId, Donation.Vendor AS VendorId, Vendor.Contact AS Name, Vendor.Email AS Email,
-            Vendor.Vendor AS Vendor, Donation.Driver AS DriverId, Driver.Driver AS Driver, Donation.Items, 
+    $sql = "SELECT Donation.Id As RecordId, Donation.Vendor AS VendorId, Vendor.Contact AS Name,
+            Vendor.Email AS Email, Vendor.Vendor AS Vendor, Donation.Driver AS Driver, Donation.Items,
             Donation.ItemDesc, Donation.QuantityType, Donation.Quantity, Donation.Value, Donation.Weight, Donation.Date 
             FROM `Donation` INNER JOIN Vendor on Donation.Vendor = Vendor.Id 
-            INNER JOIN Driver on Donation.Driver = Driver.Id 
             WHERE Items = '$varType'";
     }
     if (!empty($_GET['sort']))
@@ -179,7 +177,7 @@
             echo "   <TD>".$row['Name']."</TD>\n";
             echo "   <TD><a href='editvendor.php?id=".$row['VendorId']."'>" .$row['Vendor']. "</a></TD>\n";
             echo "   <TD bgcolor=#00FF00><a href='mailto:".$row['Email']."'>".$row['Email']."</TD>\n";
-            echo "   <TD><a href='editdriver.php?id=".$row['DriverId']."'>" .$row['Driver']. "</a></TD>\n";
+            echo "   <TD><a href='editdriver.php?name=".$row['Driver']."'>" .$row['Driver']. "</a></TD>\n";
             echo "   <TD>".$row['Items']."</TD>\n";
             echo "   <TD>".$row['ItemDesc']."</TD>\n";
             echo "   <TD>".$row['Quantity']."</TD>\n";
