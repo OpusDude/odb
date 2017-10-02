@@ -38,11 +38,11 @@
        </tr> 
        <tr>
         <td><label for="fromDate">From Date:</label></td>
-        <td align="center"><input type="text" name="datef" id="datef" alt="date" class="tcal" title="month/day/year"></td>
+        <td align="center"><input type="text" name="datef" id="datef" alt="date" class="tcal" title="mm/dd/yyyy"></td>
        </tr>
        <tr>
         <td><label for="toDate">To Date:</label></td>
-        <td align="center"><input type="text" name="datet" id="datet" alt="date" class="tcal" title="month/day/year"></td>
+        <td align="center"><input type="text" name="datet" id="datet" alt="date" class="tcal" title="mm/dd/yyyy"></td>
         <td colspan="1" align="right"><input type="submit" value="Search" /></td>
        </tr>
       </table>

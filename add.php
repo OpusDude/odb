@@ -13,6 +13,7 @@
     <body>
  <?php
     require 'creds.php';
+    $Notes = NULL;
 
     if ( isset($_POST['Vendor']) )
     { 
@@ -21,6 +22,10 @@
     elseif (!empty($_GET['Vendor']))
     {
         $vendor = $_GET["Vendor"];
+    }
+    if ( isset($_POST['Notes']) )
+    { 
+        $Notes = $_POST["Notes"];
     }
     if(isset($_POST['do']) and $_POST["do"]=="store")
     {
@@ -114,8 +119,8 @@
         {
             try
             {
-                $sql = "INSERT INTO Donation (Vendor, Driver, Items, ItemDesc, Quantity, QuantityType, Value, Weight)
-                VALUES ('$Vendor', '$Driver', '$Item', '$ItemDesc', '$Quantity', '$QuantityType', '$Value', '$Weight')";
+                $sql = "INSERT INTO Donation (Vendor, Driver, Items, ItemDesc, Quantity, QuantityType, Value, Weight, Notes)
+                VALUES ('$Vendor', '$Driver', '$Item', '$ItemDesc', '$Quantity', '$QuantityType', '$Value', '$Weight', '$Notes')";
 
                 if ($conn->query($sql) === TRUE)
                 {
@@ -207,7 +212,7 @@
                         {
                             while( $row = $result->fetch_assoc() ) 
                             {
-                                echo "    <option value=".$row['Driver'];
+                                echo "    <option value=\"".$row['Driver']."\"";
                                 if (isset($_POST['Driver']) and $_POST['Driver'] === $row['Driver']) echo ' selected="selected"';
                                 echo ">".$row['Driver']."</option>\n";
                             }
@@ -249,12 +254,14 @@
                       <td><p class="note"><?php if (isset($msg_weight)) echo $msg_weight ?></p></td>
                     </tr>
                     <tr>
-                      <td><p class="note"><b><?php if (isset($message)) echo $message ?></b></p></td>
-                      <td></td>
-                      <td colspan="4" align="right"><input type="hidden" name="do" value="store"><input type="submit" value="Add Record"></td>
+                      <td><b>Notes:</b></td>
+                      <td colspan="4" align="left"><input type="text" name="Notes" size="60" value="<?php if (isset($_POST['Notes'])) echo $_POST['Notes']; ?>"></td>
                     </tr>
                     <tr>
-                      <td colspan="4">&nbsp;</td>
+                      <td colspan="4" align="center"><input type="hidden" name="do" value="store"><input type="submit" value="Add Record"></td>
+                    </tr>
+                    <tr>
+                      <td colspan="4" align="center" ><p class="note"><b><?php if (isset($message)) echo $message ?></b></p></td>
                     </tr>
                     <tr bgcolor="#6495ED">
                       <th colspan="4" align="center" border="1"><a href="index.php">Home</a></th>

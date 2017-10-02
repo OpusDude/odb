@@ -14,7 +14,12 @@
  <?php
     require 'creds.php';
     $rec_id = $_GET["id"]; 
-    
+    $Notes = NULL;
+
+    if ( isset($_POST['Notes']) )
+    { 
+        $Notes = $_POST["Notes"];
+    }
     if(isset($_POST['do']) and $_POST["do"]=="update")
     {
         if(empty($_POST["Vendor"]))
@@ -109,7 +114,7 @@
             {
                 $NewDate = date_create()->format('Y-m-d H:i:s');
                 $sql = "UPDATE Donation SET Driver = '$Driver', Items = '$Item', ItemDesc = '$ItemDesc', Quantity = '$Quantity',
-                        QuantityType = '$QuantityType', Value = '$Value', Weight = '$Weight', Date = '$NewDate'
+                        QuantityType = '$QuantityType', Value = '$Value', Weight = '$Weight', Notes = '$Notes', Date = '$NewDate'
                         WHERE Id = '$rec_id'";
 
                 if ($conn->query($sql) === TRUE)
@@ -144,7 +149,7 @@
       $sql = "SELECT Donation.Id As Id, Donation.Vendor AS VendorId, Vendor.Contact AS Name,
               Vendor.Email AS Email, Vendor.Vendor AS Vendor, Donation.Driver AS Driver,
               Donation.Items, Donation.ItemDesc, Donation.QuantityType, Donation.Quantity,
-              Donation.Value, Donation.Weight, Donation.Date 
+              Donation.Value, Donation.Weight, Donation.Date, Donation.Notes
               FROM `Donation` INNER JOIN Vendor on Donation.Vendor = Vendor.Id 
               WHERE Donation.Id = '".$rec_id."'";
       
@@ -254,6 +259,10 @@
             <td><p class="note"><?php if (isset($msg_value)) echo $msg_value ?></p></td>
             <td></td>
             <td><p class="note"><?php if (isset($msg_weight)) echo $msg_weight ?></p></td>
+          </tr>
+          <tr>
+            <td><b>Notes:</b></td>
+            <td colspan="4" align="left"><input type="text" name="Notes" size="60" value="<?php if (isset($row['Notes'])) echo $row['Notes']; ?>"></td>
           </tr>
           <tr>
             <td colspan="4" align="center"><input type="hidden" name="do" value="update"><input type="submit" value="Update Record"></td>

@@ -13,14 +13,14 @@
             if ( $varType == 'ALL' )
             {
                 $sql1 = "SELECT * FROM Donation";
-                $sql2 = "SELECT (Quantity * Weight) as sum_weight FROM Donation";
-                $sql3 = "SELECT (Quantity * Value) as sum_value FROM Donation";
+                $sql2 = "SELECT SUM(Quantity * Weight) as sum_weight FROM Donation";
+                $sql3 = "SELECT SUM(Quantity * Value) as sum_value FROM Donation";
             }
             else
             {
                 $sql1 = "SELECT * FROM Donation WHERE Items = '$varType'";
-                $sql2 = "SELECT (Quantity * Weight) as sum_weight FROM Donation WHERE Items = '$varType'";
-                $sql3 = "SELECT (Quantity * Value) as sum_value FROM Donation WHERE Items = '$varType'";
+                $sql2 = "SELECT SUM(Quantity * Weight) as sum_weight FROM Donation WHERE Items = '$varType'";
+                $sql3 = "SELECT SUM(Quantity * Value) as sum_value FROM Donation WHERE Items = '$varType'";
             }
         }
         elseif (!empty($_GET['itemType']))
@@ -77,35 +77,35 @@
     </select>
         <input type="submit" name="Submit" value="Select" /></TD>
         <TD colspan="3" align="center"><b>Number of Items: <?php echo $numItems; ?></b></TD>
-        <TD colspan="4" align="center"><b>Total Weight (lbs): <?php echo $totalWeight['sum_weight']; ?></b></TD>
-        <TD colspan="4" align="center"><b>Total Value: $<?php echo round($totalValue['sum_value'],2); ?></b></TD>
+        <TD colspan="4" align="center"><b>Total Value: $<?php echo number_format($totalValue['sum_value'],2); ?></b></TD>
+        <TD colspan="4" align="center"><b>Total Weight: <?php echo $totalWeight['sum_weight']; ?> lbs</b></TD>
     </TR>
     <TR>
-        <TH bgcolor=#6495ED><a href="list.php?sort=RecordId&itemType=<?php echo $varType ?>" style="color:black">Record ID</a></TH>
-        <TH bgcolor=#6495ED><a href="list.php?sort=Name&itemType=<?php echo $varType ?>" style="color:black">Vendor Contact</a></TH>
         <TH bgcolor=#6495ED><a href="list.php?sort=Vendor&itemType=<?php echo $varType ?>" style="color:black">Vendor</a></TH>
-        <TH bgcolor=#6495ED><a href="list.php?sort=Email&itemType=<?php echo $varType ?>" style="color:black">Email</a></TH>
         <TH bgcolor=#6495ED><a href="list.php?sort=Driver&itemType=<?php echo $varType ?>" style="color:black">Driver</a></TH>
         <TH bgcolor=#6495ED><a href="list.php?sort=Items&itemType=<?php echo $varType ?>" style="color:black">Item</a></TH>
         <TH bgcolor=#6495ED><a href="list.php?sort=ItemDesc&itemType=<?php echo $varType ?>" style="color:black">Item Description</a></TH>
         <TH bgcolor=#6495ED><a href="list.php?sort=Quantity&itemType=<?php echo $varType ?>" style="color:black">Quantity</a></TH>
         <TH bgcolor=#6495ED><a href="list.php?sort=QuantityType&itemType=<?php echo $varType ?>" style="color:black">QuantityType</a></TH>
         <TH bgcolor=#6495ED><a href="list.php?sort=Value&itemType=<?php echo $varType ?>" style="color:black">Value</a></TH>
+        <TH bgcolor=#6495ED><a style="color:black"> Total Value</a></TH>
         <TH bgcolor=#6495ED><a href="list.php?sort=Weight&itemType=<?php echo $varType ?>" style="color:black">Weight</a></TH>
+        <TH bgcolor=#6495ED><a style="color:black">Total Weight</a></TH>
+        <TH bgcolor=#6495ED><a style="color:black">Notes</a></TH>
         <TH bgcolor=#6495ED><a href="list.php?sort=Date&itemType=<?php echo $varType ?>" style="color:black">Date</a></TH>
     </TR>
 
     <?php
     if (empty($varType) || $varType == 'ALL')
     {
-    $sql = "SELECT Donation.Id As RecordId, Donation.Vendor AS VendorId, Vendor.Contact AS Name,
+    $sql = "SELECT Donation.Id As RecordId, Donation.Vendor AS VendorId, Vendor.Contact AS Name, Donation.Notes,
             Vendor.Email AS Email, Vendor.Vendor AS Vendor, Donation.Driver AS Driver, Donation.Items,
             Donation.ItemDesc, Donation.QuantityType, Donation.Quantity, Donation.Value, Donation.Weight, Donation.Date 
             FROM `Donation` INNER JOIN Vendor on Donation.Vendor = Vendor.Id";
     }
     else
     {
-    $sql = "SELECT Donation.Id As RecordId, Donation.Vendor AS VendorId, Vendor.Contact AS Name,
+    $sql = "SELECT Donation.Id As RecordId, Donation.Vendor AS VendorId, Vendor.Contact AS Name, Donation.Notes,
             Vendor.Email AS Email, Vendor.Vendor AS Vendor, Donation.Driver AS Driver, Donation.Items,
             Donation.ItemDesc, Donation.QuantityType, Donation.Quantity, Donation.Value, Donation.Weight, Donation.Date 
             FROM `Donation` INNER JOIN Vendor on Donation.Vendor = Vendor.Id 
@@ -173,17 +173,24 @@
         while( $row = $result->fetch_assoc() ) 
         {
             echo "  <TR>\n";
-            echo "   <TD align=center><a href='edit.php?id=".$row['RecordId']."'>View # " .$row['RecordId']. "</a></TD>\n";
-            echo "   <TD>".$row['Name']."</TD>\n";
-            echo "   <TD><a href='editvendor.php?id=".$row['VendorId']."'>" .$row['Vendor']. "</a></TD>\n";
-            echo "   <TD bgcolor=#00FF00><a href='mailto:".$row['Email']."'>".$row['Email']."</TD>\n";
+            echo "   <TD><a href='edit.php?id=".$row['RecordId']."'>" .$row['Vendor']. "</a></TD>\n";
             echo "   <TD><a href='editdriver.php?name=".$row['Driver']."'>" .$row['Driver']. "</a></TD>\n";
             echo "   <TD>".$row['Items']."</TD>\n";
             echo "   <TD>".$row['ItemDesc']."</TD>\n";
             echo "   <TD>".$row['Quantity']."</TD>\n";
             echo "   <TD>".$row['QuantityType']."</TD>\n";
-            echo "   <TD>".$row['Value']."</TD>\n";
-            echo "   <TD>".$row['Weight']."</TD>\n";
+            echo "   <TD>$".number_format($row['Value'],2)."</TD>\n";
+            echo "   <TD>$".number_format($row['Value'] * $row['Quantity'],2)."</TD>\n";
+            echo "   <TD>".$row['Weight']." lbs</TD>\n";
+            echo "   <TD>".$row['Weight'] * $row['Quantity']." lbs</TD>\n";
+            if (!empty($row['Notes']))
+            {
+                echo "   <TD><abbr title=\"".$row['Notes']."\"><b>Note</b></abbr></TD>\n";
+            }
+            else
+            {
+                echo "   <TD></TD>\n";
+            }
             echo "   <TD>".$row['Date']."</TD>\n";
             //echo "   <TD>".$row['Date']->format('Y-m-d H:i:s')."</TD>\n";
         }
