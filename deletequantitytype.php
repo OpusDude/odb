@@ -24,7 +24,7 @@
     
             if ($conn->query($sql) === TRUE)
             {
-                $message = "Type '" .$_POST['Item']. "' successfully deleted from database";
+                $message = "Type '" .$_POST['Type']. "' successfully deleted from database";
             }
             else 
             {

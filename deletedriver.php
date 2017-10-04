@@ -39,7 +39,7 @@
 ?>
       <div class="container">
          <center><h1><u>ODB Donation Database</u></h1></center>
-         <form id="delete_form" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>?id=<?php echo $rec_id; ?>">
+         <form id="delete_form" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>?name=<?php echo $rec_name; ?>">
           <table width="400" style="border:1px solid silver" cellpadding="5" cellspacing="0" align="center" border="1">
             <tr>
               <td colspan="2" style="background:#6495ED; color:#FFFFFF; font-size:20px" align="center">Delete Driver</td>
@@ -59,7 +59,10 @@
             }
             else
             {
-                $message = "Driver '" .$_POST['Driver']. "' not found in Database";
+                if ($message === NULL)
+                {
+                    $message = "Driver '" .$_POST['Driver']. "' not found in Database";
+                }
                 echo "<tr>\n";
                 echo "            </tr>\n";
             }

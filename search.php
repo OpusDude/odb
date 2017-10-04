@@ -129,8 +129,8 @@ catch(Exception $e)
 ?>
       <tr>
         <td colspan="4" align="center"><b>Number of Items: <?php if(isset($numItems)) echo $numItems; ?></b></td>
-        <td colspan="4" align="center"><b>Total Value: $<?php if(isset($totalValue)) echo number_format($totalValue['sum_value'],2); ?></b></td>
-        <td colspan="5" align="center"><b>Total Weight: <?php if(isset($totalWeight)) echo $totalWeight['sum_weight']; ?> lbs</b></td>
+        <td colspan="4" align="center"><b>Sum of Total Value: $<?php if(isset($totalValue)) echo number_format($totalValue['sum_value'],2); ?></b></td>
+        <td colspan="5" align="center"><b>Sum of Total Weight: <?php if(isset($totalWeight)) echo $totalWeight['sum_weight']; ?> lbs</b></td>
       </tr>
       <tr bgcolor="#6495ED">
         <th colspan="13" align="center"><a href="index.php">Home</a></th>

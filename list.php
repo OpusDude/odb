@@ -77,8 +77,8 @@
     </select>
         <input type="submit" name="Submit" value="Select" /></TD>
         <TD colspan="3" align="center"><b>Number of Items: <?php echo $numItems; ?></b></TD>
-        <TD colspan="4" align="center"><b>Total Value: $<?php echo number_format($totalValue['sum_value'],2); ?></b></TD>
-        <TD colspan="4" align="center"><b>Total Weight: <?php echo $totalWeight['sum_weight']; ?> lbs</b></TD>
+        <TD colspan="4" align="center"><b>Sum of Total Value: $<?php echo number_format($totalValue['sum_value'],2); ?></b></TD>
+        <TD colspan="4" align="center"><b>Sum of Total Weight: <?php echo $totalWeight['sum_weight']; ?> lbs</b></TD>
     </TR>
     <TR>
         <TH bgcolor=#6495ED><a href="list.php?sort=Vendor&itemType=<?php echo $varType ?>" style="color:black">Vendor</a></TH>
