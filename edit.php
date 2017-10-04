@@ -219,6 +219,7 @@
               {
                   while( $row3 = $result3->fetch_assoc() ) 
                   {
+                      echo $row3['Driver'];
                       echo "    <option value=\"".$row3['Driver']."\"";
                       if (isset($row['Driver']) and $row3['Driver'] === $row['Driver']) echo ' selected="selected"';
                       echo ">".$row3['Driver']."</option>\n";

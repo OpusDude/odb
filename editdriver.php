@@ -13,6 +13,7 @@
  <?php
     require 'creds.php';
     $rec_name = $_GET["name"];
+    $message = NULL;
 
     if(isset($_POST['do']) and $_POST["do"]=="update")
     {
@@ -117,7 +118,10 @@
             }
             else 
             {
-                $message = "Driver '" .$rec_name. "' not found in Database";
+                if ($message === NULL)
+                {
+                    $message = "Driver '" .$rec_name. "' not found in Database";
+                }
             }
         ?>
               <tr>

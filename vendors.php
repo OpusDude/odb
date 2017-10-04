@@ -85,7 +85,7 @@
         {
             try
             {
-                $sql = "SELECT Vendor FROM Vendor WHERE Vendor='$Vendor'";
+                $sql = "SELECT Vendor, City FROM Vendor WHERE Vendor='$Vendor' AND City='$City'";
                 $result = $conn->query($sql);
                 if ( $result->num_rows > 0 )   
                 {
