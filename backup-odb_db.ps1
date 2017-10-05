@@ -36,7 +36,7 @@ try
      $myfile = "ODB_DB-$(get-date -f MM-dd-yyyy).sql"
 
      # Computer to connect to
-     $computer = "192.168.200.39"
+     $computer = "192.168.200.10"
 
 
      $SshResults = New-SshSession -ComputerName $computer -Username $loginUser -Password $loginPassword
@@ -66,7 +66,9 @@ try
 }
 catch [Exception]
 {
-    $_.Exception.Message
+    $mailBody = "<b>"
+    $mailBody += $_.Exception.Message
+    $mailBody += "</b></br></br> * - Somone should look into it..."
     $creds = New-Object System.Management.Automation.PSCredential($emailUser, $emailPassword)
-    Send-MailMessage -To $mailTo -From "info@ourdailybread.us" -Subject "ODB_DB MySQL Backups failed" -Body "Someone should look into it" -BodyAsHtml -SmtpServer $mailServer -UseSsl -Credential $creds -Port $mailPort
+    Send-MailMessage -To $mailTo -From "info@ourdailybread.us" -Subject "ODB_DB MySQL Backups failed" -Body $mailBody -BodyAsHtml -SmtpServer $mailServer -UseSsl -Credential $creds -Port $mailPort
 }
