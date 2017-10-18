@@ -97,14 +97,14 @@
         {
             $msg_weight = "You must enter a weight";
         }
-        elseif(ctype_digit($_POST["Weight"])) 
+        elseif(is_numeric($_POST["Weight"])) 
         {
             $msg_weight = NULL;
-            $Weight = $_POST["Weight"];
+            $Weight = number_format($_POST["Weight"], 2, '.', '');
         }
         else 
         {
-            $msg_weight = "Numbers only";
+            $msg_weight = "Decimal numbers only";
         }
         
         if ($msg_vendor == "" && $msg_value == "" && $msg_quantity == "" && $msg_weight == "" && 

@@ -2,7 +2,7 @@
     <head>
      <meta name="description" content="Php Code for View, Search, Edit and Delete Record" />
      <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-     <title>Add ODB Vendor</title>
+     <title>Add ODB Driver</title>
      <style type="text/css">
         h1 {margin-bottom:20px}
         input, label {margin-top:7px; margin-bottom:7px; color:black; font-size: 14px; padding-right: 7px}
